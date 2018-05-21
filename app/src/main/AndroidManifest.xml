@@ -19,6 +19,8 @@
         <activity
             android:name=".activities.terms_activities.TermsListActivity"
             android:parentActivityName=".activities.MainActivity" />
+        <activity android:name=".activities.terms_activities.AddTermActivity"
+            android:parentActivityName=".activities.terms_activities.TermsListActivity"/>
     </application>
 
 </manifest>

@@ -2,4 +2,6 @@
     <string name="app_name">Term Tracker</string>
     <string name="termsButtonText">View Terms</string>
     <string name="coursesButtonText">View Courses</string>
+    <string name="add_menu">Add New</string>
+    <string name="term_name_input">Term Name</string>
 </resources>
