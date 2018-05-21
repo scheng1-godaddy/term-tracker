@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Term Tracker</string>
+    <string name="termsButtonText">View Terms</string>
+    <string name="coursesButtonText">View Courses</string>
+</resources>
