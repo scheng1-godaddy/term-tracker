@@ -4,4 +4,6 @@
     <string name="coursesButtonText">View Courses</string>
     <string name="add_menu">Add New</string>
     <string name="term_name_input">Term Name</string>
+    <string name="term_start_date_input">Start Date</string>
+    <string name="date_hint">YYYY-MM-DD</string>
 </resources>
