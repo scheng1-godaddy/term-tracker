@@ -84,7 +84,7 @@ public class TermsListActivity extends AppCompatActivity {
 
     private void switchDetailActivity(Term term) {
         Intent intent = new Intent(this, TermDetailActivity.class);
-        intent.putExtra("termName", term.getTermName());
+        intent.putExtra("term", term);
         startActivity(intent);
     }
 }

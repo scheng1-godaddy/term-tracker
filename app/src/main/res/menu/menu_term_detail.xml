@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menu_term_addmodify_save"
-        android:title="Save"
+    <item android:id="@+id/menu_edit_term"
+        android:title="Edit"
         app:showAsAction="ifRoom" />
-    <item android:id="@+id/menu_term_addmodify_cancel"
-        android:title="Cancel"
+    <item android:id="@+id/menu_delete_term"
+        android:title="Delete"
         app:showAsAction="ifRoom" />
 </menu>

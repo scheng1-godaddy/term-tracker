@@ -68,4 +68,38 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         db.insert(TERM_TABLE_NAME, null, cv);
         return true;
     }
+
+    public Term getTerm(int termId) {
+        Term term;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + TERM_TABLE_NAME + " WHERE " + TERM_COLUMN_ID + " = " + termId,
+                null
+        );
+        cursor.moveToFirst();
+        term = new Term(
+                cursor.getInt(0),
+                cursor.getString(1),
+                cursor.getString(2),
+                cursor.getString(3)
+        );
+        cursor.close();
+        return term;
+    }
+
+    public boolean updateTerm(int id, String title, String start, String end) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TERM_COLUMN_TITLE, title);
+        contentValues.put(TERM_COLUMN_START, start);
+        contentValues.put(TERM_COLUMN_END, end);
+        db.update(
+                TERM_TABLE_NAME,
+                contentValues,
+                TERM_COLUMN_ID + " = ? ",
+                new String[] { Integer.toString(id) }
+        );
+        return true;
+    }
+
 }

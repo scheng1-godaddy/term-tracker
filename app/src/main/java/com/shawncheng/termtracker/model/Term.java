@@ -1,6 +1,9 @@
 package com.shawncheng.termtracker.model;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Term implements Serializable {
 
@@ -8,6 +11,9 @@ public class Term implements Serializable {
     private String termName;
     private String startDate;
     private String endDate;
+
+    public Term() {
+    }
 
     public Term(int termId, String termName, String startDate, String endDate) {
         this.termId = termId;
@@ -24,9 +30,7 @@ public class Term implements Serializable {
         return termName;
     }
 
-    public void setTermName(String termName) {
-        this.termName = termName;
-    }
+    public void setTermName(String termName) { this.termName = termName; }
 
     public String getStartDate() {
         return startDate;
@@ -36,9 +40,7 @@ public class Term implements Serializable {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
-        return endDate;
-    }
+    public String getEndDate() { return endDate; }
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
@@ -47,5 +49,27 @@ public class Term implements Serializable {
     @Override
     public String toString() {
         return termName;
+    }
+
+
+    public static boolean checkDate(String value) {
+
+        boolean isValid = false;
+        Date date;
+
+        if (value.trim().isEmpty()) {
+            return isValid;
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            date = dateFormat.parse(value);
+            if (value.equals(dateFormat.format(date))) {
+                isValid = true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return isValid;
     }
 }
