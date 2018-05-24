@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.course_activities.CourseDetailActivity">
+
+    <TextView
+        android:id="@+id/course_detail_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="#000"
+        android:textSize="30sp" />
+
+    <LinearLayout
+        android:id="@+id/course_detail_status_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/course_detail_title"
+        android:layout_margin="10dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/course_detail_status_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status: "
+            android:textColor="#000"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/course_detail_status_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/course_detail_start_date_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/course_detail_status_row"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/course_start_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Date: "
+            android:textColor="#000"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/course_start_date_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="YYYY-MM-DD"
+            android:textSize="15sp" />
+
+        <Switch
+            android:id="@+id/course_detail_start_alarm_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="Reminder Alarm"
+            android:textAlignment="viewEnd"
+            android:textSize="12sp"
+            tools:checked="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/course_detail_end_date_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/course_detail_start_date_row"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/course_detail_end_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Date: "
+            android:textColor="#000"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/course_detail_end_date_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="YYYY-MM-DD"
+            android:textSize="15sp" />
+
+        <Switch
+            android:id="@+id/course_detail_end_alarm_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Reminder Alarm"
+            android:textAlignment="viewEnd"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/course_detail_buttons_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/course_detail_end_date_row"
+        android:layout_margin="10dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal">
+
+
+        <Button
+            android:id="@+id/course_detail_assessment_button"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="View Assessments"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/course_detail_notes_button"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="View Notes"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/course_detail_mentor_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/course_detail_buttons_row"
+        android:layout_margin="10dp"
+        android:text="Course Mentors:"
+        android:textColor="#000"
+        android:textSize="15sp" />
+
+    <ListView
+        android:id="@+id/list_view_mentors"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/course_detail_mentor_label"
+        android:layout_margin="10dp" />
+</RelativeLayout>

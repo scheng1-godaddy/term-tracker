@@ -6,16 +6,27 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.shawncheng.termtracker.R;
+import com.shawncheng.termtracker.activities.course_activities.CourseDetailActivity;
+import com.shawncheng.termtracker.adapters.CourseListAdapter;
 import com.shawncheng.termtracker.database.DBOpenHelper;
+import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.Term;
+
+import java.util.ArrayList;
 
 public class TermDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "TermDetailActivity";
-    Term activeTerm;
+    private Term activeTerm;
+    private DBOpenHelper dbOpenHelper;
+    private ArrayList<Course> courseList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +40,12 @@ public class TermDetailActivity extends AppCompatActivity {
 
         // Display term info
         setInput();
+
+        // Display courses for the term
+        dbOpenHelper = new DBOpenHelper(this);
+        setCourseListView();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -39,7 +55,7 @@ public class TermDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.menu_edit_term:
                 Intent intent = new Intent(this, TermAddActivity.class);
                 intent.putExtra("type", "modify");
@@ -65,4 +81,27 @@ public class TermDetailActivity extends AppCompatActivity {
         startDate.setText(activeTerm.getStartDate());
         endDate.setText(activeTerm.getEndDate());
     }
+
+    private void setCourseListView() {
+        this.courseList = dbOpenHelper.getCourses(this.activeTerm.getTermId());
+        Log.d(TAG, "course list retrieved, the length is: " + courseList.size());
+        ListAdapter listAdapter = new CourseListAdapter(this, courseList);
+        ListView courseListView = findViewById(R.id.courses_list_view);
+        courseListView.setAdapter(listAdapter);
+        courseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Course course = (Course) parent.getAdapter().getItem(position);
+                switchActivity(course);
+            }
+        });
+    }
+
+    private void switchActivity(Course course) {
+        //TODO finish switchactivity after finishing class for course details
+        Intent intent = new Intent(this, CourseDetailActivity.class);
+        intent.putExtra("course", course);
+        startActivity(intent);
+    }
+
 }

@@ -22,7 +22,8 @@
         <activity
             android:name=".activities.terms_activities.TermAddActivity"
             android:parentActivityName=".activities.terms_activities.TermsListActivity" />
-        <activity android:name=".activities.terms_activities.TermDetailActivity"></activity>
+        <activity android:name=".activities.terms_activities.TermDetailActivity" />
+        <activity android:name=".activities.course_activities.CourseDetailActivity"></activity>
     </application>
 
 </manifest>

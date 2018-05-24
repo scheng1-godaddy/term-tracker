@@ -10,6 +10,8 @@ import android.view.View;
 import com.shawncheng.termtracker.*;
 import com.shawncheng.termtracker.activities.terms_activities.TermsListActivity;
 import com.shawncheng.termtracker.database.DBOpenHelper;
+import com.shawncheng.termtracker.model.Course;
+import com.shawncheng.termtracker.model.Mentor;
 import com.shawncheng.termtracker.model.Term;
 
 import java.util.ArrayList;
@@ -24,18 +26,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Start Insert Test
+//        //
+//        //Start Insert Test
 //        DBOpenHelper mDBHelper = new DBOpenHelper(this);
-//        String name = "Term2";
-//        String startDate = "2018-06-01";
-//        String endDate = "2018-09-01";
+//        String name = "Term1";
+//        String startDate = "2018-01-01";
+//        String endDate = "2018-03-01";
 //        mDBHelper.insertTerm(name, startDate, endDate);
-//        Log.d(TAG, "testInsertTerm: Inserted term name: " + name + " startDate: " + startDate + " endDate: " + endDate);
-//        //End Insert Test
-
-        //Start Retrieve all terms test
+//        Log.d(TAG, "TEST: Inserted term name: " + name + " startDate: " + startDate + " endDate: " + endDate);
+//
+//        //Start Retrieve all terms test
 //        ArrayList<Term> termsList = mDBHelper.getTerms();
-//        Log.d(TAG, "Retrieving arrayList for terms, second item is " + termsList.get(1).getTermName());
+//        Log.d(TAG, "TEST: Retrieving arrayList for terms, first item is " + termsList.get(0).getTermName());
+//        Log.d(TAG, "TEST: Term ID of first item is " + termsList.get(0).getTermId());
+//
+//        // Create mentor and add to list
+//        Mentor newMentor = new Mentor("Mentor2", "626-607-3569", "mentor2@gmail.com");
+//        ArrayList<Mentor> mentorList = new ArrayList<Mentor>();
+//        mentorList.add(newMentor);
+//
+//        //Insert Sample course
+//        mDBHelper.insertCourse("Course2", "2018-02-01", "2018-03-01", "In progress", termsList.get(0).getTermId(), mentorList);
+//        Log.d(TAG, "TEST: Inserted course: " + "Course2");
+//
+//        //Getting courses
+//        ArrayList<Course> courseList = mDBHelper.getCourses(termsList.get(0).getTermId());
+//        Log.d(TAG, "TEST: retrieved course list, second item is: " + courseList.get(1).getTitle());
 
     }
 
