@@ -22,8 +22,13 @@
         <activity
             android:name=".activities.terms_activities.TermAddActivity"
             android:parentActivityName=".activities.terms_activities.TermsListActivity" />
-        <activity android:name=".activities.terms_activities.TermDetailActivity" />
-        <activity android:name=".activities.course_activities.CourseDetailActivity"></activity>
+        <activity
+            android:name=".activities.terms_activities.TermDetailActivity"
+            android:parentActivityName=".activities.terms_activities.TermsListActivity" />
+        <activity android:name=".activities.course_activities.CourseDetailActivity" />
+        <activity android:name=".activities.assessment_activities.AssessmentDetailActivity" />
+        <activity android:name=".activities.assessment_activities.GoalDetailActivity" />
+        <activity android:name=".activities.mentor_activities.MentorAddActivity"></activity>
     </application>
 
 </manifest>

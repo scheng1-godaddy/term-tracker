@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.shawncheng.termtracker.model.Assessment;
 import com.shawncheng.termtracker.model.Course;
+import com.shawncheng.termtracker.model.GoalDate;
 import com.shawncheng.termtracker.model.Mentor;
 import com.shawncheng.termtracker.model.Term;
 
@@ -20,6 +22,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     // Term Table Constants
     private static final String TERM_TABLE_NAME = "term";
     private static final String TERM_COLUMN_ID = "termId";
+
     private static final String TERM_COLUMN_TITLE = "title";
     private static final String TERM_COLUMN_START = "startDate";
     private static final String TERM_COLUMN_END = "endDate";
@@ -56,7 +59,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String MENTOR_COLUMN_PHONE = "phone";
     private static final String MENTOR_COLUMN_EMAIL = "email";
     private static final String MENTOR_COLUMN_COURSE_ID = "course_id";
-    public static final String CREATE_MENTOR_TABLE = "CREATE TABLE " + MENTOR_TABLE_NAME + "(" +
+    public static final String CREATE_TABLE_MENTOR = "CREATE TABLE " + MENTOR_TABLE_NAME + "(" +
             MENTOR_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             MENTOR_COLUMN_NAME + " TEXT NOT NULL," +
             MENTOR_COLUMN_PHONE + " TEXT NOT NULL," +
@@ -66,6 +69,37 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             "REFERENCES " + COURSE_TABLE_NAME + "(" + COURSE_COLUMN_ID + "));";
     public static final String SQL_GET_MENTORS = "SELECT * FROM " + MENTOR_TABLE_NAME + " WHERE " + MENTOR_COLUMN_COURSE_ID + " = ";
 
+    // Assessment Table Constants
+    private static final String ASSESSMENT_TABLE_NAME = "assessment";
+    private static final String ASSESSMENT_COLUMN_ID = "assessmentId";
+    private static final String ASSESSMENT_COLUMN_TITLE = "title";
+    private static final String ASSESSMENT_COLUMN_TYPE = "type";
+    private static final String ASSESSMENT_COLUMN_DUE = "dueDate";
+    private static final String ASSESSMENT_COLUMN_COURSE_ID = "courseId";
+    public static final String CREATE_TABLE_ASSESSMENT = "CREATE TABLE " + ASSESSMENT_TABLE_NAME + "(" +
+            ASSESSMENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            ASSESSMENT_COLUMN_TITLE + " TEXT NOT NULL," +
+            ASSESSMENT_COLUMN_TYPE + " TEXT NOT NULL," +
+            ASSESSMENT_COLUMN_DUE + " TEXT NOT NULL," +
+            ASSESSMENT_COLUMN_COURSE_ID + " INTEGER NOT NULL," +
+            "FOREIGN KEY(" + ASSESSMENT_COLUMN_COURSE_ID + ") " +
+            "REFERENCES " + COURSE_TABLE_NAME + "(" + COURSE_COLUMN_ID + "));";
+    public static final String SQL_GET_ASSESSMENTS = "SELECT * FROM " + ASSESSMENT_TABLE_NAME + " WHERE " + ASSESSMENT_COLUMN_COURSE_ID + " = ";
+
+    // Goal Date Table Constants
+    private static final String GOAL_DATE_TABLE_NAME = "goal_date";
+    private static final String GOAL_DATE_COLUMN_ID = "goal_date_id";
+    private static final String GOAL_DATE_COLUMN_DATE = "date";
+    private static final String GOAL_DATE_COLUMN_ASSESSMENT_ID = "assessment_id";
+    public static final String SQL_GET_GOALS = "SELECT * FROM " + GOAL_DATE_TABLE_NAME + " WHERE " + GOAL_DATE_COLUMN_ASSESSMENT_ID + " = ";
+    public static final String CREATE_TABLE_GOAL_DATE = "CREATE TABLE " + GOAL_DATE_TABLE_NAME + "(" +
+            GOAL_DATE_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            GOAL_DATE_COLUMN_DATE + " TEXT NOT NULL," +
+            GOAL_DATE_COLUMN_ASSESSMENT_ID + " INTEGER NOT NULL," +
+            "FOREIGN KEY(" + GOAL_DATE_COLUMN_ASSESSMENT_ID + ")" +
+            "REFERENCES " + ASSESSMENT_TABLE_NAME + "(" + ASSESSMENT_COLUMN_ID + "));";
+    public static final String SQL_GET_GOAL = "SELECT * FROM " + GOAL_DATE_TABLE_NAME + " WHERE " + GOAL_DATE_COLUMN_ASSESSMENT_ID + " = ";
+
     public DBOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -74,13 +108,18 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_TERM);
         db.execSQL(CREATE_TABLE_COURSE);
-        db.execSQL(CREATE_MENTOR_TABLE);
+        db.execSQL(CREATE_TABLE_MENTOR);
+        db.execSQL(CREATE_TABLE_ASSESSMENT);
+        db.execSQL(CREATE_TABLE_GOAL_DATE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TERM_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + COURSE_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MENTOR_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ASSESSMENT_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + GOAL_DATE_TABLE_NAME);
         onCreate(db);
     }
 
@@ -108,6 +147,12 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         cv.put(TERM_COLUMN_START, start);
         cv.put(TERM_COLUMN_END, end);
         db.insert(TERM_TABLE_NAME, null, cv);
+        return true;
+    }
+
+    public boolean deleteTerm(int termId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TERM_TABLE_NAME, TERM_COLUMN_ID + " = " + termId, null);
         return true;
     }
 
@@ -199,4 +244,83 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         cursor.close();
         return mentorList;
     }
+
+    public boolean insertAssessment(String title, String type, String due, int courseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ASSESSMENT_COLUMN_TITLE, title);
+        contentValues.put(ASSESSMENT_COLUMN_TYPE, type);
+        contentValues.put(ASSESSMENT_COLUMN_DUE, due);
+        contentValues.put(ASSESSMENT_COLUMN_COURSE_ID, courseId);
+        db.insert(ASSESSMENT_TABLE_NAME, null, contentValues);
+        return true;
+    }
+
+    public boolean deleteAssessment(int assessmentId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(ASSESSMENT_TABLE_NAME, ASSESSMENT_COLUMN_ID + " = " + assessmentId, null);
+        db.delete(GOAL_DATE_TABLE_NAME, GOAL_DATE_COLUMN_ASSESSMENT_ID + " = " + assessmentId, null);
+        return true;
+    }
+
+
+    public ArrayList<Assessment> getAssessments(int courseId) {
+        ArrayList<Assessment> assessmentArrayList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(SQL_GET_ASSESSMENTS + courseId,null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int mId = cursor.getInt(0);
+            String mTitle = cursor.getString(1);
+            String mType = cursor.getString(2);
+            String mDue = cursor.getString(3);
+            int mCourseId = cursor.getInt(4);
+            assessmentArrayList.add(new Assessment(mId, mTitle, mType, mDue, mCourseId));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return assessmentArrayList;
+    }
+
+    public void insertGoal(String goalDate,  long assessmentId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(GOAL_DATE_COLUMN_DATE, goalDate);
+        contentValues.put(GOAL_DATE_COLUMN_ASSESSMENT_ID, assessmentId);
+        db.insert(GOAL_DATE_TABLE_NAME, null, contentValues);
+    }
+
+    public GoalDate getGoal(int assessmentId) {
+        GoalDate goal;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                SQL_GET_GOAL + assessmentId,
+                null
+        );
+        cursor.moveToFirst();
+        goal = new GoalDate(
+                cursor.getInt(0),
+                cursor.getString(1),
+                cursor.getInt(2)
+        );
+        cursor.close();
+        return goal;
+    }
+
+    public ArrayList<GoalDate> getGoals(int assessmentId) {
+        ArrayList<GoalDate> goalDates = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(SQL_GET_GOALS + assessmentId, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int goalId = cursor.getInt(0);
+            String date = cursor.getString(1);
+            int assessId = cursor.getInt(2);
+            goalDates.add(new GoalDate(goalId, date, assessId));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return goalDates;
+    }
+
 }

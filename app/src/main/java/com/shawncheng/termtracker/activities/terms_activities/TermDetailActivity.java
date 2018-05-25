@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shawncheng.termtracker.R;
 import com.shawncheng.termtracker.activities.course_activities.CourseDetailActivity;
@@ -32,6 +33,7 @@ public class TermDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term_detail);
+        setTitle("Term Details");
 
         // Get info on the term
         Intent intent = getIntent();
@@ -70,7 +72,22 @@ public class TermDetailActivity extends AppCompatActivity {
     }
 
     private void deleteTerm() {
-        //TODO create delete term after creating courses, you need to check if term has any courses before deleting
+        if (isCourseListEmpty()) {
+            if (dbOpenHelper.deleteTerm(activeTerm.getTermId())) {
+                Toast.makeText(getBaseContext(), "Term successfully removed", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(getBaseContext(), "Term could not be removed", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getBaseContext(), "Removal failed: must remove courses first", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private boolean isCourseListEmpty() {
+        ArrayList<Course> courseList = dbOpenHelper.getCourses(activeTerm.getTermId());
+        return courseList.isEmpty();
     }
 
     private void setInput() {
@@ -98,7 +115,6 @@ public class TermDetailActivity extends AppCompatActivity {
     }
 
     private void switchActivity(Course course) {
-        //TODO finish switchactivity after finishing class for course details
         Intent intent = new Intent(this, CourseDetailActivity.class);
         intent.putExtra("course", course);
         startActivity(intent);

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.assessment_activities.AssessmentDetailActivity">
+
+    <TextView
+        android:id="@+id/assessment_detail_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="15dp"
+        android:text="TextView"
+        android:textSize="15sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:orientation="horizontal"
+        android:id="@+id/assessment_type_row"
+        android:layout_below="@id/assessment_detail_title">
+        <TextView
+            android:id="@+id/assessment_type_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Type: "
+            android:textColor="#000"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/assessment_type_value"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:orientation="horizontal"
+        android:id="@+id/assessment_due_date_row"
+        android:layout_below="@id/assessment_type_row">
+        <TextView
+            android:id="@+id/assessment_due_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Due Date: "
+            android:textColor="#000"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/assessment_due_date_value"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:orientation="horizontal"
+        android:id="@+id/assessment_goal_date_row"
+        android:layout_below="@id/assessment_due_date_row">
+        <TextView
+            android:id="@+id/assessment_goal_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Goal Date: "
+            android:textColor="#000"
+            android:textSize="12sp" />
+
+
+        <ListView
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:id="@+id/assessment_goal_date_list_view"/>
+
+        <Switch
+            android:id="@+id/switch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Set Reminder Alert"
+            android:textAlignment="textEnd"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -10,7 +10,9 @@ import android.view.View;
 import com.shawncheng.termtracker.*;
 import com.shawncheng.termtracker.activities.terms_activities.TermsListActivity;
 import com.shawncheng.termtracker.database.DBOpenHelper;
+import com.shawncheng.termtracker.model.Assessment;
 import com.shawncheng.termtracker.model.Course;
+import com.shawncheng.termtracker.model.GoalDate;
 import com.shawncheng.termtracker.model.Mentor;
 import com.shawncheng.termtracker.model.Term;
 
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        //
 //        //Start Insert Test
-//        DBOpenHelper mDBHelper = new DBOpenHelper(this);
+        DBOpenHelper mDBHelper = new DBOpenHelper(this);
 //        String name = "Term1";
 //        String startDate = "2018-01-01";
 //        String endDate = "2018-03-01";
@@ -52,6 +54,24 @@ public class MainActivity extends AppCompatActivity {
 //        //Getting courses
 //        ArrayList<Course> courseList = mDBHelper.getCourses(termsList.get(0).getTermId());
 //        Log.d(TAG, "TEST: retrieved course list, second item is: " + courseList.get(1).getTitle());
+
+        // Insert assessments
+//        GoalDate goalDate1 = new GoalDate("GoalDate Description", "2018-06-01");
+//        ArrayList<GoalDate> goalDateArrayList = new ArrayList<>();
+//        goalDateArrayList.add(goalDate1);
+//
+//        mDBHelper.insertAssessment("Assessment1", "Objective", "2018-07-01", 1);
+//        Log.d(TAG, "TEST: Starting Testing");
+//        ArrayList<Assessment> assessmentArrayList = mDBHelper.getAssessments(1);
+//        Log.d(TAG, "TEST: First assessment in list: " + assessmentArrayList.get(0).getTitle());
+//        mDBHelper.insertGoal("2018-02-01", 1);
+        GoalDate goal = mDBHelper.getGoal(1);
+        Log.d(TAG, "TEST: Goal date retrieved was: " + goal.getDate());
+
+        // Remove assessment
+        //mDBHelper.deleteAssessment(assessmentArrayList.get(0).getAssessmentId());
+
+
 
     }
 

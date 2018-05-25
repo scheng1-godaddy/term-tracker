@@ -4,12 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.terms_activities.TermsListActivity">
+    tools:context=".activities.assessment_activities.GoalDetailActivity">
 
-    <ListView
-        android:id="@+id/lv_terms"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_margin="10dp" />
 </RelativeLayout>

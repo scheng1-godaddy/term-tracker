@@ -1,6 +1,8 @@
 package com.shawncheng.termtracker.model;
 
-public class Mentor {
+import java.io.Serializable;
+
+public class Mentor implements Serializable {
 
     private String name;
     private String phone;

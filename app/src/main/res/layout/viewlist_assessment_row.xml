@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:id="@+id/assessment_list_row"
     android:layout_marginTop="10dp">
 
     <TextView
-        android:id="@+id/course_row_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:paddingLeft="15dp"
-        android:paddingTop="15dp"/>
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:id="@+id/assessment_list_name" />
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="view details >"
-        android:paddingTop="15dp"/>
+        android:gravity="center_vertical"
+        android:id="@+id/mentor_list_detail"
+        android:text="view details > "/>
 
 </LinearLayout>

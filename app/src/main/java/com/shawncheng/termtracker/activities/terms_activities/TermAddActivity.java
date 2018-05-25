@@ -66,15 +66,19 @@ public class TermAddActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_term_addmodify_cancel:
                 // Switch activity to add term activity
-                if (termType.equals("add")) {
-                    Intent intent = new Intent(this, TermsListActivity.class);
-                    startActivity(intent);
-                }
+//                if (termType.equals("add")) {
+//                    Intent intent = new Intent(this, TermsListActivity.class);
+//                    startActivity(intent);
+//                }
+                finish();
+                break;
             case R.id.menu_term_addmodify_save:
                 saveButtonHandler();
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void saveButtonHandler() {
@@ -82,17 +86,24 @@ public class TermAddActivity extends AppCompatActivity {
             if (this.termType.equals("add")) {
                 if (this.dbOpenHelper.insertTerm(newTerm.getTermName(), newTerm.getStartDate(), newTerm.getEndDate())) {
                     Toast.makeText(getBaseContext(), "Term successfully added", Toast.LENGTH_SHORT).show();
+                    switchActivity();
                 } else {
                     Toast.makeText(getBaseContext(), "Failed to add term", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 if (this.dbOpenHelper.updateTerm(existingTerm.getTermId(), newTerm.getTermName(), newTerm.getStartDate(), newTerm.getEndDate())) {
                     Toast.makeText(getBaseContext(), "Term successfully updated", Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
                 } else {
                     Toast.makeText(getBaseContext(), "Failed to update term", Toast.LENGTH_SHORT).show();
                 }
             }
         }
+    }
+
+    private void switchActivity() {
+        Intent intent = new Intent(this, TermsListActivity.class);
+        startActivity(intent);
     }
 
     private boolean validateInput() {
