@@ -4,8 +4,8 @@
 
     <item android:id="@+id/menu_edit_term"
         android:title="Edit"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
     <item android:id="@+id/menu_delete_term"
         android:title="Delete"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 </menu>

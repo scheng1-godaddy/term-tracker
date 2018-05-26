@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shawncheng.termtracker.R;
+import com.shawncheng.termtracker.activities.course_activities.CourseAddActivity;
 import com.shawncheng.termtracker.activities.course_activities.CourseDetailActivity;
 import com.shawncheng.termtracker.adapters.CourseListAdapter;
 import com.shawncheng.termtracker.database.DBOpenHelper;
@@ -50,6 +51,12 @@ public class TermDetailActivity extends AppCompatActivity {
 
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        setCourseListView();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_term_detail, menu);
         return true;
@@ -82,7 +89,6 @@ public class TermDetailActivity extends AppCompatActivity {
         } else {
             Toast.makeText(getBaseContext(), "Removal failed: must remove courses first", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private boolean isCourseListEmpty() {
@@ -109,15 +115,25 @@ public class TermDetailActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Course course = (Course) parent.getAdapter().getItem(position);
-                switchActivity(course);
+                switchActivity(CourseDetailActivity.class, course);
             }
         });
     }
 
-    private void switchActivity(Course course) {
-        Intent intent = new Intent(this, CourseDetailActivity.class);
-        intent.putExtra("course", course);
+    private void switchActivity(Class<?> detailClass, Course course) {
+        Intent intent = new Intent(this, detailClass);
+        if (detailClass.equals(CourseDetailActivity.class)) {
+            intent.putExtra("course", course);
+        }
+        if (detailClass.equals(CourseAddActivity.class)) {
+            intent.putExtra("term", activeTerm);
+            intent.putExtra("type", "add");
+        }
         startActivity(intent);
+    }
+
+    public void addCourseButtonHandler(android.view.View myview) {
+        switchActivity(CourseAddActivity.class, null);
     }
 
 }

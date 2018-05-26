@@ -190,7 +190,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean insertCourse(String title, String start, String end, String status, int termId, ArrayList<Mentor> mentors) {
+    public long insertCourse(String title, String start, String end, String status, int termId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COURSE_COLUMN_TITLE, title);
@@ -198,16 +198,36 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         contentValues.put(COURSE_COLUMN_END, end);
         contentValues.put(COURSE_COLUMN_STATUS, status);
         contentValues.put(COURSE_COLUMN_TERM_ID, termId);
-        long mCourseId = db.insert(COURSE_TABLE_NAME, null, contentValues);
-        for (Mentor mentor : mentors) {
-            ContentValues cv1 = new ContentValues();
-            cv1.put(MENTOR_COLUMN_NAME, mentor.getName());
-            cv1.put(MENTOR_COLUMN_PHONE, mentor.getPhone());
-            cv1.put(MENTOR_COLUMN_EMAIL, mentor.getEmail());
-            cv1.put(MENTOR_COLUMN_COURSE_ID, mCourseId);
-            db.insert(MENTOR_TABLE_NAME, null, cv1);
-        }
-        return true;
+        long courseId = db.insert(COURSE_TABLE_NAME, null, contentValues);
+//        for (Mentor mentor : mentors) {
+//            ContentValues cv1 = new ContentValues();
+//            cv1.put(MENTOR_COLUMN_NAME, mentor.getName());
+//            cv1.put(MENTOR_COLUMN_PHONE, mentor.getPhone());
+//            cv1.put(MENTOR_COLUMN_EMAIL, mentor.getEmail());
+//            cv1.put(MENTOR_COLUMN_COURSE_ID, mCourseId);
+//            db.insert(MENTOR_TABLE_NAME, null, cv1);
+//        }
+        return courseId;
+    }
+
+    public Course getCourse(int courseId) {
+        Course course;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(
+                "SELECT * FROM " + COURSE_TABLE_NAME + " WHERE " + COURSE_COLUMN_ID + " = " + courseId,
+                null
+        );
+        res.moveToFirst();
+        course = new Course(
+                res.getInt(0),
+                res.getString(1),
+                res.getString(2),
+                res.getString(3),
+                res.getString(4),
+                res.getInt(5)
+        );
+        res.close();
+        return course;
     }
 
     public ArrayList<Course> getCourses(int termId) {
@@ -229,10 +249,45 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         return courseList;
     }
 
+    public boolean deleteCourse(int courseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(COURSE_TABLE_NAME, COURSE_COLUMN_ID + " = " + courseId, null);
+        db.delete(ASSESSMENT_TABLE_NAME, ASSESSMENT_COLUMN_COURSE_ID + " = " + courseId, null);
+        //TODO If we put note table, then we'll need to delete notes from here too
+        return true;
+    }
+
+    public boolean updateCourse(int id, String title, String start, String end, String status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COURSE_COLUMN_TITLE, title);
+        contentValues.put(COURSE_COLUMN_START, start);
+        contentValues.put(COURSE_COLUMN_END, end);
+        contentValues.put(COURSE_COLUMN_STATUS, status);
+        db.update(COURSE_TABLE_NAME, contentValues, COURSE_COLUMN_ID + " = ? ", new String[] { Integer.toString(id) });
+        return true;
+    }
+
     public ArrayList<Mentor> getMentors(int courseId) {
         ArrayList<Mentor> mentorList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(SQL_GET_MENTORS + courseId,null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            String mName = cursor.getString(1);
+            String mPhone = cursor.getString(2);
+            String mEmail = cursor.getString(3);
+            mentorList.add(new Mentor(mName, mPhone, mEmail));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return mentorList;
+    }
+
+    public ArrayList<Mentor> getMentors() {
+        ArrayList<Mentor> mentorList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + MENTOR_TABLE_NAME,null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             String mName = cursor.getString(1);

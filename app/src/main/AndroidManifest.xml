@@ -28,7 +28,10 @@
         <activity android:name=".activities.course_activities.CourseDetailActivity" />
         <activity android:name=".activities.assessment_activities.AssessmentDetailActivity" />
         <activity android:name=".activities.assessment_activities.GoalDetailActivity" />
-        <activity android:name=".activities.mentor_activities.MentorAddActivity"></activity>
+        <activity android:name=".activities.mentor_activities.MentorAddActivity" />
+        <activity android:name=".activities.mentor_activities.MentorDetailActivity" />
+        <activity android:name=".activities.course_activities.CourseAddActivity" />
+        <activity android:name=".activities.assessment_activities.AssessmentAddActivity"></activity>
     </application>
 
 </manifest>

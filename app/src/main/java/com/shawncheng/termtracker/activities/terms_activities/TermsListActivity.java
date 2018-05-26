@@ -33,6 +33,12 @@ public class TermsListActivity extends AppCompatActivity {
         populateTermListView();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        populateTermListView();
+    }
+
     /**
      * Create menu (only add button)
      *

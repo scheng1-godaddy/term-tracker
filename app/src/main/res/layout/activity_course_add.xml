@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activities.course_activities.CourseAddActivity">
+
+
+        <EditText
+            android:id="@+id/course_add_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:textColor="#000"
+            android:textSize="30sp"
+            android:inputType="text"
+            android:hint="Enter Name"
+            android:focusedByDefault="true"/>
+        <requestFocus />
+
+        <LinearLayout
+            android:id="@+id/course_add_status_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/course_add_title"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/course_add_status_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status: "
+                android:textColor="#000"
+                android:textSize="15sp" />
+
+            <Spinner
+                android:id="@+id/course_add_status_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/course_add_start_date_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/course_add_status_row"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/course_start_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Date: "
+                android:textColor="#000"
+                android:textSize="15sp" />
+
+
+            <EditText
+                android:id="@+id/course_add_start_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:hint="YYYY-MM-DD"
+                android:textSize="15sp"
+                android:inputType="date"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/course_add_end_date_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/course_add_start_date_row"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/course_add_end_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End Date: "
+                android:textColor="#000"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/course_add_end_date_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:hint="YYYY-MM-DD"
+                android:textSize="15sp"
+                android:inputType="date"/>
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/course_add_assessment_button"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_below="@+id/course_add_end_date_row"
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="1"
+            android:onClick="addAssessmentHandler"
+            android:text="Add Assessment" />
+
+        <ListView
+            android:id="@+id/list_view_course_add_assessments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/course_add_assessment_button"
+            android:layout_marginHorizontal="10dp" />
+
+        <Button
+            android:id="@+id/course_add_mentor_button"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_below="@+id/list_view_course_add_assessments"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:onClick="addMentorHandler"
+            android:text="Add Mentor" />
+
+        <ListView
+            android:id="@+id/list_view_course_add_mentors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/course_add_mentor_button"
+            android:layout_marginHorizontal="10dp" />
+    </RelativeLayout>
+
+</ScrollView>

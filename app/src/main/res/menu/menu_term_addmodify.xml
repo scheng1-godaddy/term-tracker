@@ -4,8 +4,8 @@
 
     <item android:id="@+id/menu_term_addmodify_save"
         android:title="Save"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
     <item android:id="@+id/menu_term_addmodify_cancel"
         android:title="Cancel"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 </menu>

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.shawncheng.termtracker.R;
 import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Term;
+import com.shawncheng.termtracker.util.Util;
 
 public class TermAddActivity extends AppCompatActivity {
 
@@ -65,11 +66,6 @@ public class TermAddActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_term_addmodify_cancel:
-                // Switch activity to add term activity
-//                if (termType.equals("add")) {
-//                    Intent intent = new Intent(this, TermsListActivity.class);
-//                    startActivity(intent);
-//                }
                 finish();
                 break;
             case R.id.menu_term_addmodify_save:
@@ -115,13 +111,13 @@ public class TermAddActivity extends AppCompatActivity {
         } else {
             newTerm.setTermName(this.termNameInput.getText().toString());
         }
-        if(!(Term.checkDate(this.startDateInput.getText().toString()))) {
+        if(!(Util.checkDate(this.startDateInput.getText().toString()))) {
             Toast.makeText(getBaseContext(), "Please enter a valid start date", Toast.LENGTH_SHORT).show();
             return false;
         } else {
             newTerm.setStartDate(this.startDateInput.getText().toString());
         }
-        if(!(Term.checkDate(this.endDateInput.getText().toString()))) {
+        if(!(Util.checkDate(this.endDateInput.getText().toString()))) {
             Toast.makeText(getBaseContext(), "Please enter a valid end date", Toast.LENGTH_SHORT).show();
             return false;
         } else {

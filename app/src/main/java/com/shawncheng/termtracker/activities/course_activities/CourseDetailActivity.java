@@ -3,15 +3,21 @@ package com.shawncheng.termtracker.activities.course_activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shawncheng.termtracker.R;
 import com.shawncheng.termtracker.activities.assessment_activities.AssessmentDetailActivity;
 import com.shawncheng.termtracker.activities.mentor_activities.MentorAddActivity;
+import com.shawncheng.termtracker.activities.mentor_activities.MentorDetailActivity;
+import com.shawncheng.termtracker.activities.terms_activities.TermAddActivity;
 import com.shawncheng.termtracker.adapters.AssessmentListAdapter;
 import com.shawncheng.termtracker.adapters.MentorsListAdapter;
 import com.shawncheng.termtracker.database.DBOpenHelper;
@@ -23,6 +29,7 @@ import java.util.ArrayList;
 
 public class CourseDetailActivity extends AppCompatActivity {
 
+    private static final String TAG = "CourseDetailActivity";
     private Course activeCourse;
     private DBOpenHelper dbOpenHelper;
 
@@ -41,9 +48,46 @@ public class CourseDetailActivity extends AppCompatActivity {
         setMentorListView();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume gets called");
+        activeCourse = dbOpenHelper.getCourse(activeCourse.getCourseId());
+        setInputs();
+        setAssessmentListView();
+        setMentorListView();
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_course_detail, menu);
+        return true;
+    }
 
-    //TODO implement menu for course detail (I'm assuming you need to put edit and delete.
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_edit_course:
+                Intent intent = new Intent(this, CourseAddActivity.class);
+                intent.putExtra("type", "modify");
+                intent.putExtra("course", activeCourse);
+                startActivity(intent);
+                break;
+            case R.id.menu_delete_course:
+                deleteCourse();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteCourse() {
+        if (dbOpenHelper.deleteCourse(activeCourse.getCourseId())) {
+            Toast.makeText(getBaseContext(), "Course successfully removed", Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            Toast.makeText(getBaseContext(), "Course could not be removed", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void setInputs() {
         TextView title = findViewById(R.id.course_detail_title);
@@ -79,7 +123,7 @@ public class CourseDetailActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Mentor mentor = (Mentor) parent.getAdapter().getItem(position);
-                switchDetailActivity(MentorAddActivity.class, mentor);
+                switchDetailActivity(MentorDetailActivity.class, mentor);
             }
         });
     }
@@ -89,7 +133,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         if (detailClass.equals(AssessmentDetailActivity.class)) {
             Assessment assessment = (Assessment) obj;
             intent.putExtra("assessment", assessment);
-        } else if (detailClass.equals(MentorAddActivity.class)) {
+        } else if (detailClass.equals(MentorDetailActivity.class)) {
             Mentor mentor = (Mentor) obj;
             intent.putExtra("mentor", mentor);
             intent.putExtra("type", "view");
