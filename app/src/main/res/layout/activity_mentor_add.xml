@@ -43,7 +43,7 @@
             android:layout_weight="1"
             android:inputType="phone"
             android:paddingRight="20dp"
-            android:text="Enter Phone"
+            android:hint="Enter Phone"
             android:textColor="#000"
             android:textSize="15sp" />
     </LinearLayout>
@@ -74,7 +74,7 @@
             android:layout_weight="1"
             android:inputType="textEmailAddress"
             android:paddingRight="20dp"
-            android:text="Enter email"
+            android:hint="Enter email"
             android:textColor="#000"
             android:textSize="15sp" />
 

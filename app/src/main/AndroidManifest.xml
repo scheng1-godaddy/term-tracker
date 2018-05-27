@@ -31,7 +31,9 @@
         <activity android:name=".activities.mentor_activities.MentorAddActivity" />
         <activity android:name=".activities.mentor_activities.MentorDetailActivity" />
         <activity android:name=".activities.course_activities.CourseAddActivity" />
-        <activity android:name=".activities.assessment_activities.AssessmentAddActivity"></activity>
+        <activity android:name=".activities.assessment_activities.AssessmentAddActivity" />
+        <activity android:name=".activities.course_activities.CourseAddMentorActivity" />
+        <activity android:name=".activities.course_activities.CourseAddAssessmentActivity"></activity>
     </application>
 
 </manifest>

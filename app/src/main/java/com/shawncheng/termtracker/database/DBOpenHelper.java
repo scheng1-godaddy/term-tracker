@@ -268,16 +268,38 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public long insertMentor(String title, String phone, String email, int courseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MENTOR_COLUMN_NAME, title);
+        contentValues.put(MENTOR_COLUMN_PHONE, phone);
+        contentValues.put(MENTOR_COLUMN_EMAIL, email);
+        contentValues.put(MENTOR_COLUMN_COURSE_ID, courseId);
+        return db.insert(MENTOR_TABLE_NAME, null, contentValues);
+    }
+
+    public boolean updateMentor(int id, String title, String phone, String email, int courseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MENTOR_COLUMN_NAME, title);
+        contentValues.put(MENTOR_COLUMN_PHONE, phone);
+        contentValues.put(MENTOR_COLUMN_EMAIL, email);
+        contentValues.put(MENTOR_COLUMN_COURSE_ID, courseId);
+        db.update(MENTOR_TABLE_NAME, contentValues, MENTOR_COLUMN_ID + " = ? ", new String[] { Integer.toString(id) });
+        return true;
+    }
+
     public ArrayList<Mentor> getMentors(int courseId) {
         ArrayList<Mentor> mentorList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(SQL_GET_MENTORS + courseId,null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
+            int id = cursor.getInt(0);
             String mName = cursor.getString(1);
             String mPhone = cursor.getString(2);
             String mEmail = cursor.getString(3);
-            mentorList.add(new Mentor(mName, mPhone, mEmail));
+            mentorList.add(new Mentor(id, mName, mPhone, mEmail));
             cursor.moveToNext();
         }
         cursor.close();
@@ -290,10 +312,11 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + MENTOR_TABLE_NAME,null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
+            int id = cursor.getInt(0);
             String mName = cursor.getString(1);
             String mPhone = cursor.getString(2);
             String mEmail = cursor.getString(3);
-            mentorList.add(new Mentor(mName, mPhone, mEmail));
+            mentorList.add(new Mentor(id, mName, mPhone, mEmail));
             cursor.moveToNext();
         }
         cursor.close();

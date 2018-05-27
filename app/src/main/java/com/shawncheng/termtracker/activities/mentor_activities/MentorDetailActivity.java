@@ -37,4 +37,6 @@ public class MentorDetailActivity extends AppCompatActivity {
         phoneInput.setText(activeMentor.getPhone());
         emailInput.setText(activeMentor.getEmail());
     }
+
+    //TODO Have to put finish() when canceling out, this is because it can be viewed from the list that adds courses
 }

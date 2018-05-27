@@ -105,7 +105,16 @@
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/course_add_next_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/course_add_end_date_row"
+            android:layout_weight="1"
+            android:onClick="nextButtonHandler"
+            android:text="Next >" />
 
+        <!--
         <Button
             android:id="@+id/course_add_assessment_button"
             android:layout_width="match_parent"
@@ -140,6 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/course_add_mentor_button"
             android:layout_marginHorizontal="10dp" />
+            -->
     </RelativeLayout>
 
 </ScrollView>
