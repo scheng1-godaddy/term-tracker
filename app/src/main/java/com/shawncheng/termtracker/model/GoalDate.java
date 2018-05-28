@@ -7,8 +7,15 @@ public class GoalDate {
     private String date;
     private int assessmentId;
 
+    public GoalDate() {}
+
     public GoalDate(String date) {
         this.date = date;
+    }
+
+    public GoalDate(String date, int assessmentId) {
+        this.date = date;
+        this.assessmentId = assessmentId;
     }
 
     public GoalDate(int goalDateId, String goalDate, int assessmentId) {
@@ -21,9 +28,13 @@ public class GoalDate {
         return goalDateId;
     }
 
+    public void setGoalDateId(int goalDateId) { this.goalDateId = goalDateId; }
+
     public int getAssessmentId() {
         return assessmentId;
     }
+
+    public void setAssessmentId(int assessmentId) { this.assessmentId = assessmentId; }
 
     public String getDate() {
         return date;

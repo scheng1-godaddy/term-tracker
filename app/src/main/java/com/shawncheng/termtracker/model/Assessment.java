@@ -24,6 +24,8 @@ public class Assessment implements Serializable {
         return assessmentId;
     }
 
+    public void setAssessmentId(int id) { this.assessmentId = id; }
+
     public String getTitle() {
         return title;
     }
@@ -60,4 +62,5 @@ public class Assessment implements Serializable {
     public String toString() {
         return getTitle();
     }
+
 }

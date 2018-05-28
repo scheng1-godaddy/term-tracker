@@ -28,6 +28,7 @@ import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.Mentor;
 import com.shawncheng.termtracker.model.Term;
 import com.shawncheng.termtracker.util.Util;
+import static com.shawncheng.termtracker.util.IntentConstants.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +37,8 @@ import java.util.List;
 public class CourseAddActivity extends AppCompatActivity {
 
     private static final String TAG = "CourseAddActivity";
+
+
     private Course activeCourse;
     private Term activeTerm;
     private Course newCourse;
@@ -100,11 +103,11 @@ public class CourseAddActivity extends AppCompatActivity {
 
 
     private void resolveType() {
-        this.courseType = this.intent.getStringExtra("type");
-        if (this.courseType.equals("add")) {
+        this.courseType = this.intent.getStringExtra(INTENT_TAG_TYPE);
+        if (this.courseType.equals(INTENT_VALUE_ADD)) {
             Log.d(TAG, "resolveType: Intent was for a course ADD");
             setTitle("Add Course");
-            this.activeTerm = (Term) this.intent.getSerializableExtra("term");
+            this.activeTerm = (Term) this.intent.getSerializableExtra(INTENT_TAG_TERM);
             Log.d(TAG, "Adding course for term: " + activeTerm.getTermName());
         } else {
             Log.d(TAG, "resolveType: Intent was for a course MODIFY");
@@ -158,7 +161,10 @@ public class CourseAddActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "Course successfully added", Toast.LENGTH_SHORT).show();
                     newCourse.setCourseId(courseId);
                     Intent newIntent = new Intent(this, CourseAddMentorActivity.class);
-                    newIntent.putExtra("course", newCourse);
+                    newIntent.putExtra(INTENT_TAG_COURSE, newCourse);
+                    newIntent.putExtra(INTENT_TAG_TERM, activeTerm);
+                    newIntent.putExtra(INTENT_TAG_ORIGIN, INTENT_VALUE_ORIGIN_COURSEADD);
+                    Log.d(TAG, "[Intent Tracking] intent name is: " + newCourse.getTitle() +  ", Intent ID is: " + newCourse.getCourseId());
                     startActivity(newIntent);
                 } else {
                     Toast.makeText(getBaseContext(), "Failed to add course", Toast.LENGTH_SHORT).show();
@@ -168,6 +174,7 @@ public class CourseAddActivity extends AppCompatActivity {
                 if (this.dbOpenHelper.updateCourse(activeCourse.getCourseId(), newCourse.getTitle(), newCourse.getStartDate(), newCourse.getEndDate(), newCourse.getStatus())) {
                     Toast.makeText(getBaseContext(), "Course successfully updated", Toast.LENGTH_SHORT).show();
                     Intent newIntent = new Intent(this, CourseAddMentorActivity.class);
+                    //TODO Origin here for coming from detail screen?
                     newIntent.putExtra("course", newCourse);
                     startActivity(newIntent);
                     //finish();
@@ -198,7 +205,12 @@ public class CourseAddActivity extends AppCompatActivity {
             return false;
         } else {
             newCourse.setEndDate(this.endDateInput.getText().toString());
+        }
+        if (this.status != null && this.status.getSelectedItem() != null) {
             newCourse.setStatus(this.status.getSelectedItem().toString());
+        } else {
+            Toast.makeText(getBaseContext(), "Please select a status", Toast.LENGTH_SHORT).show();
+            return false;
         }
         return true;
     }

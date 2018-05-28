@@ -15,12 +15,14 @@ import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.Mentor;
 import com.shawncheng.termtracker.util.Util;
+import static com.shawncheng.termtracker.util.IntentConstants.*;
 
 import java.util.ArrayList;
 
 public class MentorAddActivity extends AppCompatActivity {
 
     private static final String TAG = "MentorAddActivity";
+
     private EditText nameInput;
     private EditText phoneInput;
     private EditText emailInput;
@@ -42,15 +44,15 @@ public class MentorAddActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.mentor_add_email_value);
 
         Intent intent = getIntent();
-        mentorType = intent.getStringExtra("type");
-        if (mentorType.equals("modify")) {
-            this.activeMentor = (Mentor) intent.getSerializableExtra("mentor");
+        mentorType = intent.getStringExtra(INTENT_TAG_TYPE);
+        if (mentorType.equals(INTENT_VALUE_MODIFY)) {
+            this.activeMentor = (Mentor) intent.getSerializableExtra(INTENT_TAG_MENTOR);
             setInputs(activeMentor);
             setTitle("Edit Mentor");
         } else {
             setTitle("Add Mentor");
         }
-        courseId = intent.getIntExtra("courseId", 0);
+        courseId = intent.getIntExtra(INTENT_TAG_COURSEID, 0);
     }
 
     @Override

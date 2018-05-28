@@ -3,6 +3,9 @@ package com.shawncheng.termtracker.activities.course_activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -16,27 +19,53 @@ import com.shawncheng.termtracker.adapters.MentorsListAdapter;
 import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.Mentor;
+import com.shawncheng.termtracker.model.Term;
+
+import static com.shawncheng.termtracker.util.IntentConstants.*;
 
 import java.util.ArrayList;
 
 public class CourseAddMentorActivity extends AppCompatActivity {
 
+
+    private static final String TAG = "CourseAddMentorActivity";
     private Intent intent;
     private DBOpenHelper dbOpenHelper;
     private Course activeCourse;
+    private Term activeTerm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_add_mentor);
         intent = getIntent();
-        activeCourse = (Course) intent.getSerializableExtra("course");
+        activeCourse = (Course) intent.getSerializableExtra(INTENT_TAG_COURSE);
+        activeTerm = (Term) intent.getSerializableExtra(INTENT_TAG_TERM);
+        Log.d(TAG, "[Intent Tracking] intent name is: " + activeCourse.getTitle() +  ", Intent ID is: " + activeCourse.getCourseId());
 
         setTitle(activeCourse.getTitle());
 
         dbOpenHelper = new DBOpenHelper(this);
 
         setMentorListView();
+    }
+
+    //TODO Have to put a menu here for next... we just want to skip to the next screen... I don't think we need to put a cancel button.
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_course_add_mentor, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_course_add_mentor_next:
+                changeActivity(CourseAddAssessmentActivity.class, null);
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -67,12 +96,20 @@ public class CourseAddMentorActivity extends AppCompatActivity {
         Intent intent = new Intent(this, activityClass);
         if (activityClass.equals(MentorDetailActivity.class)) {
             Mentor mentor = (Mentor) obj;
-            intent.putExtra("type", "view");
-            intent.putExtra("mentor", mentor);
+            intent.putExtra(INTENT_TAG_TYPE, INTENT_VALUE_VIEW);
+            intent.putExtra(INTENT_TAG_MENTOR, mentor);
         }
         if (activityClass.equals(MentorAddActivity.class)) {
-            intent.putExtra("type", "add");
-            intent.putExtra("courseId", activeCourse.getCourseId());
+            intent.putExtra(INTENT_TAG_TYPE, INTENT_VALUE_ADD);
+            intent.putExtra(INTENT_TAG_COURSEID, activeCourse.getCourseId());
+            intent.putExtra(INTENT_TAG_ORIGIN, intent.getStringExtra(INTENT_TAG_ORIGIN));
+        }
+        if (activityClass.equals(CourseAddAssessmentActivity.class)) {
+            Course course = (Course) obj;
+            intent.putExtra(INTENT_TAG_TYPE, INTENT_VALUE_ADD);
+            intent.putExtra(INTENT_TAG_COURSE, activeCourse);
+            intent.putExtra(INTENT_TAG_TERM, activeTerm);
+            intent.putExtra(INTENT_TAG_ORIGIN, intent.getStringExtra(INTENT_TAG_ORIGIN));
         }
         startActivity(intent);
     }

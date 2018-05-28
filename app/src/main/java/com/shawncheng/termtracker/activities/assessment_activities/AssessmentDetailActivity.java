@@ -37,6 +37,7 @@ public class AssessmentDetailActivity extends AppCompatActivity {
         setGoalListView();
     }
 
+    //TODO Might need to remove goal view. Alter assessment detail view
     private void setGoalListView() {
         ArrayList<GoalDate> goalDateArrayList = dbOpenHelper.getGoals(activeAssessment.getAssessmentId());
         ListView listView = findViewById(R.id.assessment_goal_date_list_view);

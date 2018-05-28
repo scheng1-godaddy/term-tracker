@@ -16,6 +16,7 @@ import com.shawncheng.termtracker.*;
 import com.shawncheng.termtracker.adapters.TermsListAdapter;
 import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Term;
+import static com.shawncheng.termtracker.util.IntentConstants.*;
 
 import java.util.ArrayList;
 
@@ -63,7 +64,7 @@ public class TermsListActivity extends AppCompatActivity {
             case R.id.menu_add:
                 // Switch activity to add term activity
                 Intent intent = new Intent(this, TermAddActivity.class);
-                intent.putExtra("type", "add");
+                intent.putExtra(INTENT_TAG_TYPE, INTENT_VALUE_ADD);
                 startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
@@ -90,7 +91,7 @@ public class TermsListActivity extends AppCompatActivity {
 
     private void switchDetailActivity(Term term) {
         Intent intent = new Intent(this, TermDetailActivity.class);
-        intent.putExtra("term", term);
+        intent.putExtra(INTENT_TAG_TERM, term);
         startActivity(intent);
     }
 }

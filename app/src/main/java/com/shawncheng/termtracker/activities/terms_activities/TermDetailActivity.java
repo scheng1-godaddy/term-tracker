@@ -20,6 +20,7 @@ import com.shawncheng.termtracker.adapters.CourseListAdapter;
 import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.Term;
+import static com.shawncheng.termtracker.util.IntentConstants.*;
 
 import java.util.ArrayList;
 
@@ -38,7 +39,7 @@ public class TermDetailActivity extends AppCompatActivity {
 
         // Get info on the term
         Intent intent = getIntent();
-        this.activeTerm = (Term) intent.getSerializableExtra("term");
+        this.activeTerm = (Term) intent.getSerializableExtra(INTENT_TAG_TERM);
         Log.d(TAG, "onCreate: Active term is: " + activeTerm.getTermName());
 
         // Display term info
@@ -51,7 +52,7 @@ public class TermDetailActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onResume() {
+    protected void onRestart() {
         super.onResume();
         setCourseListView();
     }
@@ -67,8 +68,8 @@ public class TermDetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_edit_term:
                 Intent intent = new Intent(this, TermAddActivity.class);
-                intent.putExtra("type", "modify");
-                intent.putExtra("term", activeTerm);
+                intent.putExtra(INTENT_TAG_TYPE, INTENT_VALUE_MODIFY);
+                intent.putExtra(INTENT_TAG_TERM, activeTerm);
                 startActivity(intent);
                 break;
             case R.id.menu_delete_term:
@@ -120,14 +121,15 @@ public class TermDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void switchActivity(Class<?> detailClass, Course course) {
+    private void switchActivity(Class<?> detailClass, Object obj) {
         Intent intent = new Intent(this, detailClass);
         if (detailClass.equals(CourseDetailActivity.class)) {
-            intent.putExtra("course", course);
+            Course course = (Course) obj;
+            intent.putExtra(INTENT_TAG_COURSE, course);
         }
         if (detailClass.equals(CourseAddActivity.class)) {
-            intent.putExtra("term", activeTerm);
-            intent.putExtra("type", "add");
+            intent.putExtra(INTENT_TAG_TERM, activeTerm);
+            intent.putExtra(INTENT_TAG_TYPE, INTENT_VALUE_ADD);
         }
         startActivity(intent);
     }

@@ -323,14 +323,25 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         return mentorList;
     }
 
-    public boolean insertAssessment(String title, String type, String due, int courseId) {
+    public long insertAssessment(String title, String type, String due, int courseId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(ASSESSMENT_COLUMN_TITLE, title);
         contentValues.put(ASSESSMENT_COLUMN_TYPE, type);
         contentValues.put(ASSESSMENT_COLUMN_DUE, due);
         contentValues.put(ASSESSMENT_COLUMN_COURSE_ID, courseId);
-        db.insert(ASSESSMENT_TABLE_NAME, null, contentValues);
+        long id = db.insert(ASSESSMENT_TABLE_NAME, null, contentValues);
+        return id;
+    }
+
+    public boolean updateAssessment(int id, String title, String type, String due, int courseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ASSESSMENT_COLUMN_TITLE, title);
+        contentValues.put(ASSESSMENT_COLUMN_TYPE, type);
+        contentValues.put(ASSESSMENT_COLUMN_DUE, due);
+        contentValues.put(ASSESSMENT_COLUMN_COURSE_ID, courseId);
+        db.update(ASSESSMENT_TABLE_NAME, contentValues, ASSESSMENT_COLUMN_ID + " = ?", new String[] {Integer.toString(id)});
         return true;
     }
 
@@ -366,6 +377,13 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         contentValues.put(GOAL_DATE_COLUMN_DATE, goalDate);
         contentValues.put(GOAL_DATE_COLUMN_ASSESSMENT_ID, assessmentId);
         db.insert(GOAL_DATE_TABLE_NAME, null, contentValues);
+    }
+
+    public void updateGoal(String goalDate,  long assessmentId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(GOAL_DATE_COLUMN_DATE, goalDate);
+        db.update(GOAL_DATE_TABLE_NAME, contentValues, GOAL_DATE_COLUMN_ASSESSMENT_ID + " = ?", new String[] {Long.toString(assessmentId)});
     }
 
     public GoalDate getGoal(int assessmentId) {
