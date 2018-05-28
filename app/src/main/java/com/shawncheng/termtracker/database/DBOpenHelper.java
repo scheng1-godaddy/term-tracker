@@ -252,7 +252,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public boolean deleteCourse(int courseId) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(COURSE_TABLE_NAME, COURSE_COLUMN_ID + " = " + courseId, null);
-        db.delete(ASSESSMENT_TABLE_NAME, ASSESSMENT_COLUMN_COURSE_ID + " = " + courseId, null);
+        deleteAssessmentFromCourse(courseId);
+        //db.delete(ASSESSMENT_TABLE_NAME, ASSESSMENT_COLUMN_COURSE_ID + " = " + courseId, null);
         //TODO If we put note table, then we'll need to delete notes from here too
         return true;
     }
@@ -306,21 +307,29 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         return mentorList;
     }
 
-    public ArrayList<Mentor> getMentors() {
-        ArrayList<Mentor> mentorList = new ArrayList<>();
+    public Mentor getMentor(int mentorId) {
+        Mentor mentor;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + MENTOR_TABLE_NAME,null);
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + MENTOR_TABLE_NAME + " WHERE " + MENTOR_COLUMN_ID + " = " + mentorId,
+                null
+        );
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            int id = cursor.getInt(0);
-            String mName = cursor.getString(1);
-            String mPhone = cursor.getString(2);
-            String mEmail = cursor.getString(3);
-            mentorList.add(new Mentor(id, mName, mPhone, mEmail));
-            cursor.moveToNext();
-        }
+        mentor = new Mentor(
+                cursor.getInt(0),
+                cursor.getString(1),
+                cursor.getString(2),
+                cursor.getString(3),
+                cursor.getInt(4)
+        );
         cursor.close();
-        return mentorList;
+        return mentor;
+    }
+
+    public boolean deleteMentor(int mentorId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(MENTOR_TABLE_NAME, MENTOR_COLUMN_ID + " = " + mentorId, null);
+        return true;
     }
 
     public long insertAssessment(String title, String type, String due, int courseId) {
@@ -352,6 +361,15 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean deleteAssessmentFromCourse(int courseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<Assessment> assessmentArrayList = getAssessments(courseId);
+        db.delete(ASSESSMENT_TABLE_NAME, ASSESSMENT_COLUMN_COURSE_ID + " = " + courseId, null);
+        for (Assessment assessment : assessmentArrayList) {
+            db.delete(GOAL_DATE_TABLE_NAME, GOAL_DATE_COLUMN_ASSESSMENT_ID + " = " + assessment.getAssessmentId(), null);
+        }
+        return true;
+    }
 
     public ArrayList<Assessment> getAssessments(int courseId) {
         ArrayList<Assessment> assessmentArrayList = new ArrayList<>();

@@ -80,5 +80,21 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/mentor_detail_edit_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mentor_detail_email_row"
+        android:onClick="editButtonHandler"
+        android:text="Edit" />
+
+    <Button
+        android:id="@+id/mentor_detail_delete_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mentor_detail_edit_button"
+        android:onClick="deleteButtonHandler"
+        android:text="Delete" />
+
 
 </RelativeLayout>

@@ -30,7 +30,7 @@ public class MentorAddActivity extends AppCompatActivity {
     private Mentor activeMentor;
     private DBOpenHelper dbOpenHelper;
     private Mentor newMentor;
-    private int courseId;
+    private Course activeCourse;
     private ArrayList<Mentor> mentorList;
 
     @Override
@@ -52,7 +52,7 @@ public class MentorAddActivity extends AppCompatActivity {
         } else {
             setTitle("Add Mentor");
         }
-        courseId = intent.getIntExtra(INTENT_TAG_COURSEID, 0);
+        activeCourse = (Course) intent.getSerializableExtra(INTENT_TAG_COURSE);
     }
 
     @Override
@@ -81,8 +81,8 @@ public class MentorAddActivity extends AppCompatActivity {
 
     public void saveMentor() {
         if (validateInput()) {
-            if (this.mentorType.equals("add")) {
-                long mentorId = this.dbOpenHelper.insertMentor(newMentor.getName(), newMentor.getPhone(), newMentor.getEmail(), courseId);
+            if (this.mentorType.equals(INTENT_VALUE_ADD)) {
+                long mentorId = this.dbOpenHelper.insertMentor(newMentor.getName(), newMentor.getPhone(), newMentor.getEmail(), activeCourse.getCourseId());
                 if (mentorId != -1) {
                     Toast.makeText(getBaseContext(), "Mentor successfully added", Toast.LENGTH_SHORT).show();
                     finish();
@@ -91,10 +91,10 @@ public class MentorAddActivity extends AppCompatActivity {
                 }
             } else {
                 if (this.dbOpenHelper.updateMentor(activeMentor.getId(), newMentor.getName(), newMentor.getPhone(), newMentor.getEmail(), newMentor.getCourseId())) {
-                    Toast.makeText(getBaseContext(), "Course successfully updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Mentor successfully updated", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(getBaseContext(), "Failed to update course", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Failed to update mentor", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -120,7 +120,7 @@ public class MentorAddActivity extends AppCompatActivity {
             return false;
         } else {
             newMentor.setEmail(this.emailInput.getText().toString());
-            newMentor.setCourseId(courseId);
+            newMentor.setCourseId(activeCourse.getCourseId());
         }
         return true;
     }

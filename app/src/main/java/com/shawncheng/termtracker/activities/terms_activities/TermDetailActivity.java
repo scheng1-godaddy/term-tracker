@@ -53,7 +53,7 @@ public class TermDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
-        super.onResume();
+        super.onRestart();
         setCourseListView();
     }
 
@@ -110,18 +110,18 @@ public class TermDetailActivity extends AppCompatActivity {
         this.courseList = dbOpenHelper.getCourses(this.activeTerm.getTermId());
         Log.d(TAG, "course list retrieved, the length is: " + courseList.size());
         ListAdapter listAdapter = new CourseListAdapter(this, courseList);
-        ListView courseListView = findViewById(R.id.courses_list_view);
-        courseListView.setAdapter(listAdapter);
-        courseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ListView listView = findViewById(R.id.courses_list_view);
+        listView.setAdapter(listAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Course course = (Course) parent.getAdapter().getItem(position);
-                switchActivity(CourseDetailActivity.class, course);
+                changeActivity(CourseDetailActivity.class, course);
             }
         });
     }
 
-    private void switchActivity(Class<?> detailClass, Object obj) {
+    private void changeActivity(Class<?> detailClass, Object obj) {
         Intent intent = new Intent(this, detailClass);
         if (detailClass.equals(CourseDetailActivity.class)) {
             Course course = (Course) obj;
@@ -135,7 +135,7 @@ public class TermDetailActivity extends AppCompatActivity {
     }
 
     public void addCourseButtonHandler(android.view.View myview) {
-        switchActivity(CourseAddActivity.class, null);
+        changeActivity(CourseAddActivity.class, null);
     }
 
 }

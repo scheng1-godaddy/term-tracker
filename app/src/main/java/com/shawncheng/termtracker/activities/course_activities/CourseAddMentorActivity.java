@@ -101,7 +101,7 @@ public class CourseAddMentorActivity extends AppCompatActivity {
         }
         if (activityClass.equals(MentorAddActivity.class)) {
             intent.putExtra(INTENT_TAG_TYPE, INTENT_VALUE_ADD);
-            intent.putExtra(INTENT_TAG_COURSEID, activeCourse.getCourseId());
+            intent.putExtra(INTENT_TAG_COURSEID, activeCourse);
             intent.putExtra(INTENT_TAG_ORIGIN, intent.getStringExtra(INTENT_TAG_ORIGIN));
         }
         if (activityClass.equals(CourseAddAssessmentActivity.class)) {

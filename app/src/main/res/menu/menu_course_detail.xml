@@ -8,4 +8,7 @@
     <item android:id="@+id/menu_delete_course"
         android:title="Delete"
         app:showAsAction="always" />
+    <item android:id="@+id/menu_close_course"
+        android:title="Close"
+        app:showAsAction="always" />
 </menu>

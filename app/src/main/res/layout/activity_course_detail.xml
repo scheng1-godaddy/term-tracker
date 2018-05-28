@@ -117,46 +117,83 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/course_detail_assessment_label"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/course_detail_assessment_label_row"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/course_detail_end_date_row"
-            android:layout_margin="10dp"
-            android:text="Assessments: "
-            android:textColor="#000"
-            android:textSize="15sp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/course_detail_assessment_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/course_detail_end_date_row"
+                android:text="Assessments: "
+                android:textColor="#000"
+                android:textSize="15sp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="addAssessmentHandler"
+                android:text="Add Assessment"
+                android:textAlignment="center"
+                android:textSize="10sp" />
+        </LinearLayout>
 
         <ListView
             android:id="@+id/list_view_assessments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/course_detail_assessment_label"
-            android:layout_margin="10dp" />
+            android:layout_below="@id/course_detail_assessment_label_row"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
 
-        <TextView
-            android:id="@+id/course_detail_mentor_label"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/course_detail_mentor_label_row"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/list_view_assessments"
             android:layout_margin="10dp"
-            android:text="Course Mentors:"
-            android:textColor="#000"
-            android:textSize="15sp" />
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/course_detail_mentor_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/list_view_assessments"
+                android:text="Course Mentors:"
+                android:textColor="#000"
+                android:textSize="15sp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="addMentorHandler"
+                android:text="Add Mentor"
+                android:textAlignment="center"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+
 
         <ListView
             android:id="@+id/list_view_mentors"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/course_detail_mentor_label"
-            android:layout_margin="10dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@id/course_detail_mentor_label_row"/>
+
 
         <LinearLayout
             android:id="@+id/course_detail_buttons_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/list_view_mentors"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:gravity="center_vertical|center_horizontal"
             android:orientation="horizontal">
 

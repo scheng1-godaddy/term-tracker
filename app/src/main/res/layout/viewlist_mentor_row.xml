@@ -4,23 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:id="@+id/mentor_list_row"
-    android:layout_marginTop="10dp">
+    android:id="@+id/mentor_list_row">
 
     <TextView
         android:paddingLeft="15dp"
+        android:paddingTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:id="@+id/mentor_list_name"
-        android:paddingTop="15dp"/>
+        android:textSize="15sp"
+        android:textColor="#000"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:id="@+id/mentor_list_detail"
-        android:text="view details > "
-        android:paddingTop="15dp"/>
+        android:text="view details > " />
 
 </LinearLayout>

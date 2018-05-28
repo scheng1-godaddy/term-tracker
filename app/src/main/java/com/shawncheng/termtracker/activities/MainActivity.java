@@ -4,79 +4,82 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.shawncheng.termtracker.*;
-import com.shawncheng.termtracker.activities.terms_activities.TermsListActivity;
+import com.shawncheng.termtracker.activities.terms_activities.TermAddActivity;
+import com.shawncheng.termtracker.activities.terms_activities.TermDetailActivity;
+import com.shawncheng.termtracker.adapters.TermsListAdapter;
 import com.shawncheng.termtracker.database.DBOpenHelper;
-import com.shawncheng.termtracker.model.Assessment;
-import com.shawncheng.termtracker.model.Course;
-import com.shawncheng.termtracker.model.GoalDate;
-import com.shawncheng.termtracker.model.Mentor;
 import com.shawncheng.termtracker.model.Term;
+import static com.shawncheng.termtracker.util.IntentConstants.*;
 
 import java.util.ArrayList;
 
+
 public class MainActivity extends AppCompatActivity {
 
-
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "TermsListActivity";
+    private DBOpenHelper dbOpenHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-//        //
-//        //Start Insert Test
-        DBOpenHelper mDBHelper = new DBOpenHelper(this);
-//        String name = "Term1";
-//        String startDate = "2018-01-01";
-//        String endDate = "2018-03-01";
-//        mDBHelper.insertTerm(name, startDate, endDate);
-//        Log.d(TAG, "TEST: Inserted term name: " + name + " startDate: " + startDate + " endDate: " + endDate);
-//
-//        //Start Retrieve all terms test
-//        ArrayList<Term> termsList = mDBHelper.getTerms();
-//        Log.d(TAG, "TEST: Retrieving arrayList for terms, first item is " + termsList.get(0).getTermName());
-//        Log.d(TAG, "TEST: Term ID of first item is " + termsList.get(0).getTermId());
-//
-//        // Create mentor and add to list
-//        Mentor newMentor = new Mentor("Mentor2", "626-607-3569", "mentor2@gmail.com");
-//        ArrayList<Mentor> mentorList = new ArrayList<Mentor>();
-//        mentorList.add(newMentor);
-//
-//        //Insert Sample course
-//        mDBHelper.insertCourse("Course2", "2018-02-01", "2018-03-01", "In progress", termsList.get(0).getTermId(), mentorList);
-//        Log.d(TAG, "TEST: Inserted course: " + "Course2");
-//
-//        //Getting courses
-//        ArrayList<Course> courseList = mDBHelper.getCourses(termsList.get(0).getTermId());
-//        Log.d(TAG, "TEST: retrieved course list, second item is: " + courseList.get(1).getTitle());
-
-        // Insert assessments
-//        GoalDate goalDate1 = new GoalDate("GoalDate Description", "2018-06-01");
-//        ArrayList<GoalDate> goalDateArrayList = new ArrayList<>();
-//        goalDateArrayList.add(goalDate1);
-//
-//        mDBHelper.insertAssessment("Assessment1", "Objective", "2018-07-01", 1);
-//        Log.d(TAG, "TEST: Starting Testing");
-//        ArrayList<Assessment> assessmentArrayList = mDBHelper.getAssessments(1);
-//        Log.d(TAG, "TEST: First assessment in list: " + assessmentArrayList.get(0).getTitle());
-//        mDBHelper.insertGoal("2018-02-01", 1);
-        GoalDate goal = mDBHelper.getGoal(1);
-        Log.d(TAG, "TEST: Goal date retrieved was: " + goal.getDate());
-
-        // Remove assessment
-        //mDBHelper.deleteAssessment(assessmentArrayList.get(0).getAssessmentId());
-
-
-
+        setContentView(R.layout.activity_terms_list);
+        setTitle("Terms Listing");
+        populateTermListView();
     }
 
-    public void handleViewTerms(View view) {
-        Intent intent = new Intent(this, TermsListActivity.class);
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        populateTermListView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_term_list, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_add:
+                // Switch activity to add term activity
+                Intent intent = new Intent(this, TermAddActivity.class);
+                intent.putExtra(INTENT_TAG_TYPE, INTENT_VALUE_ADD);
+                startActivity(intent);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    // Populate the listView
+    private void populateTermListView() {
+        Log.d(TAG, "populateListView: Retreiving terms to populate ListView");
+        this.dbOpenHelper = new DBOpenHelper(this);
+        final ArrayList<Term> termsList = dbOpenHelper.getTerms();
+        ListAdapter termsListAdapter = new TermsListAdapter(this, termsList);
+        ListView listView = findViewById(R.id.lv_terms);
+        listView.setAdapter(termsListAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Term termItem = (Term) parent.getAdapter().getItem(position);
+                changeActivity(termItem);
+            }
+        });
+    }
+
+    private void changeActivity(Term term) {
+        Intent intent = new Intent(this, TermDetailActivity.class);
+        intent.putExtra(INTENT_TAG_TERM, term);
         startActivity(intent);
     }
 }

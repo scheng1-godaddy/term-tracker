@@ -3,10 +3,11 @@ package com.shawncheng.termtracker.activities.course_activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -14,16 +15,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shawncheng.termtracker.R;
+import com.shawncheng.termtracker.activities.assessment_activities.AssessmentAddActivity;
 import com.shawncheng.termtracker.activities.assessment_activities.AssessmentDetailActivity;
 import com.shawncheng.termtracker.activities.mentor_activities.MentorAddActivity;
 import com.shawncheng.termtracker.activities.mentor_activities.MentorDetailActivity;
-import com.shawncheng.termtracker.activities.terms_activities.TermAddActivity;
 import com.shawncheng.termtracker.adapters.AssessmentListAdapter;
 import com.shawncheng.termtracker.adapters.MentorsListAdapter;
 import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Assessment;
 import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.Mentor;
+import com.shawncheng.termtracker.util.Util;
+
+import static com.shawncheng.termtracker.util.IntentConstants.*;
 
 import java.util.ArrayList;
 
@@ -48,10 +52,10 @@ public class CourseDetailActivity extends AppCompatActivity {
         setMentorListView();
     }
 
+
     @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume gets called");
+    protected void onRestart() {
+        super.onRestart();
         activeCourse = dbOpenHelper.getCourse(activeCourse.getCourseId());
         setInputs();
         setAssessmentListView();
@@ -75,6 +79,9 @@ public class CourseDetailActivity extends AppCompatActivity {
                 break;
             case R.id.menu_delete_course:
                 deleteCourse();
+                break;
+            case R.id.menu_close_course:
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -105,11 +112,12 @@ public class CourseDetailActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.list_view_assessments);
         ListAdapter listAdapter = new AssessmentListAdapter(this, assessmentArrayList);
         listView.setAdapter(listAdapter);
+        Util.setListViewHeightBasedOnChildren(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Assessment assessment = (Assessment) parent.getAdapter().getItem(position);
-                switchDetailActivity(AssessmentDetailActivity.class, assessment);
+                changeActivity(AssessmentDetailActivity.class, assessment);
             }
         });
     }
@@ -119,26 +127,42 @@ public class CourseDetailActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.list_view_mentors);
         ListAdapter listAdapter = new MentorsListAdapter(this, mentorArrayList);
         listView.setAdapter(listAdapter);
+        Util.setListViewHeightBasedOnChildren(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Mentor mentor = (Mentor) parent.getAdapter().getItem(position);
-                switchDetailActivity(MentorDetailActivity.class, mentor);
+                changeActivity(MentorDetailActivity.class, mentor);
             }
         });
     }
 
-    private void switchDetailActivity(Class<?> detailClass, Object obj) {
+    public void addMentorHandler(View view) {
+        changeActivity(MentorAddActivity.class, null);
+    }
+
+    public void addAssessmentHandler(View view) {
+        changeActivity(AssessmentAddActivity.class, null);
+    }
+
+    private void changeActivity(Class<?> detailClass, Object obj) {
         Intent intent = new Intent(this, detailClass);
         if (detailClass.equals(AssessmentDetailActivity.class)) {
             Assessment assessment = (Assessment) obj;
-            intent.putExtra("assessment", assessment);
+            intent.putExtra(INTENT_TAG_ASSESSMENT, assessment);
+            intent.putExtra(INTENT_TAG_COURSE, activeCourse);
         } else if (detailClass.equals(MentorDetailActivity.class)) {
             Mentor mentor = (Mentor) obj;
-            intent.putExtra("mentor", mentor);
-            intent.putExtra("type", "view");
+            intent.putExtra(INTENT_TAG_MENTOR, mentor);
+            intent.putExtra(INTENT_TAG_TYPE, INTENT_VALUE_VIEW);
+            intent.putExtra(INTENT_TAG_COURSE, activeCourse);
+        } else if (detailClass.equals(MentorAddActivity.class)) {
+            intent.putExtra(INTENT_TAG_TYPE, INTENT_VALUE_ADD);
+            intent.putExtra(INTENT_TAG_COURSE, activeCourse);
+        } else if (detailClass.equals(AssessmentAddActivity.class)) {
+            intent.putExtra(INTENT_TAG_COURSE, activeCourse);
+            intent.putExtra(INTENT_TAG_TYPE, INTENT_VALUE_ADD);
         }
         startActivity(intent);
     }
-
 }

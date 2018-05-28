@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -40,6 +41,7 @@ public class CourseAddActivity extends AppCompatActivity {
 
 
     private Course activeCourse;
+    private Button saveButton;
     private Term activeTerm;
     private Course newCourse;
     private EditText courseNameInput;
@@ -68,6 +70,7 @@ public class CourseAddActivity extends AppCompatActivity {
         this.startDateInput = findViewById(R.id.course_add_start_value);
         this.endDateInput = findViewById(R.id.course_add_end_date_value);
         this.status = findViewById(R.id.course_add_status_spinner);
+        this.saveButton = findViewById(R.id.course_add_next_button);
 
         // Populate the drop down menu
         populateStatusSpinner();
@@ -113,6 +116,7 @@ public class CourseAddActivity extends AppCompatActivity {
             Log.d(TAG, "resolveType: Intent was for a course MODIFY");
             setTitle("Modify Course");
             this.activeCourse = (Course) this.intent.getSerializableExtra("course");
+            this.saveButton.setText("Save");
             setInputs();
         }
     }
@@ -173,11 +177,11 @@ public class CourseAddActivity extends AppCompatActivity {
                 newCourse.setCourseId(activeCourse.getCourseId());
                 if (this.dbOpenHelper.updateCourse(activeCourse.getCourseId(), newCourse.getTitle(), newCourse.getStartDate(), newCourse.getEndDate(), newCourse.getStatus())) {
                     Toast.makeText(getBaseContext(), "Course successfully updated", Toast.LENGTH_SHORT).show();
-                    Intent newIntent = new Intent(this, CourseAddMentorActivity.class);
-                    //TODO Origin here for coming from detail screen?
-                    newIntent.putExtra("course", newCourse);
-                    startActivity(newIntent);
-                    //finish();
+//                    Intent newIntent = new Intent(this, CourseAddMentorActivity.class);
+//                    //TODO Origin here for coming from detail screen?
+//                    newIntent.putExtra(INTENT_TAG_COURSE, newCourse);
+//                    startActivity(newIntent);
+                    finish();
                 } else {
                     Toast.makeText(getBaseContext(), "Failed to update course", Toast.LENGTH_SHORT).show();
                 }
