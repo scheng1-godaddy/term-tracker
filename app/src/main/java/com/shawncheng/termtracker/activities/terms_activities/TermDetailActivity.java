@@ -1,15 +1,21 @@
 package com.shawncheng.termtracker.activities.terms_activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +26,8 @@ import com.shawncheng.termtracker.adapters.CourseListAdapter;
 import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.Term;
+import com.shawncheng.termtracker.util.Util;
+
 import static com.shawncheng.termtracker.util.IntentConstants.*;
 
 import java.util.ArrayList;
@@ -42,18 +50,24 @@ public class TermDetailActivity extends AppCompatActivity {
         this.activeTerm = (Term) intent.getSerializableExtra(INTENT_TAG_TERM);
         Log.d(TAG, "onCreate: Active term is: " + activeTerm.getTermName());
 
-        // Display term info
-        setInput();
+
 
         // Display courses for the term
         dbOpenHelper = new DBOpenHelper(this);
+
+        // Display term info
+        setInput();
+
         setCourseListView();
+        addDeleteButton();
     }
 
 
     @Override
     protected void onRestart() {
         super.onRestart();
+        activeTerm = dbOpenHelper.getTerm(activeTerm.getTermId());
+        setInput();
         setCourseListView();
     }
 
@@ -66,15 +80,14 @@ public class TermDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_edit_term:
+            case R.id.menu_term_detail_edit:
                 Intent intent = new Intent(this, TermAddActivity.class);
                 intent.putExtra(INTENT_TAG_TYPE, INTENT_VALUE_MODIFY);
                 intent.putExtra(INTENT_TAG_TERM, activeTerm);
                 startActivity(intent);
                 break;
-            case R.id.menu_delete_term:
-                deleteTerm();
-                break;
+            case R.id.menu_term_detail_close:
+                finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -112,6 +125,7 @@ public class TermDetailActivity extends AppCompatActivity {
         ListAdapter listAdapter = new CourseListAdapter(this, courseList);
         ListView listView = findViewById(R.id.courses_list_view);
         listView.setAdapter(listAdapter);
+        Util.setListViewHeightBasedOnChildren(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -136,6 +150,41 @@ public class TermDetailActivity extends AppCompatActivity {
 
     public void addCourseButtonHandler(android.view.View myview) {
         changeActivity(CourseAddActivity.class, null);
+    }
+
+    private void addDeleteButton() {
+        RelativeLayout rlayout = findViewById(R.id.term_detail_relativelayout);
+        Button dbutton = new Button(this);
+        dbutton.setText("Delete Term");
+        dbutton.setTextColor(Color.WHITE);
+        dbutton.setBackgroundColor(Color.RED);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.BELOW, R.id.courses_list_view);
+        dbutton.setLayoutParams(params);
+        dbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayAlertDialog();
+            }
+        });
+        if (rlayout != null) {
+            rlayout.addView(dbutton);
+        }
+    }
+
+    private void displayAlertDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm")
+                .setMessage("Do you wish to delete Term?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteTerm();
+                    }
+                }).setNegativeButton(android.R.string.no, null).show();
     }
 
 }

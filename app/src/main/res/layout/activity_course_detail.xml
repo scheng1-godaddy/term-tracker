@@ -7,7 +7,8 @@
     <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activities.course_activities.CourseDetailActivity">
+        tools:context=".activities.course_activities.CourseDetailActivity"
+        android:id="@+id/course_detail_relativelayout">
 
 
         <TextView
@@ -162,7 +163,6 @@
                 android:id="@+id/course_detail_mentor_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/list_view_assessments"
                 android:text="Course Mentors:"
                 android:textColor="#000"
                 android:textSize="15sp" />
@@ -176,8 +176,6 @@
                 android:textSize="10sp" />
         </LinearLayout>
 
-
-
         <ListView
             android:id="@+id/list_view_mentors"
             android:layout_width="match_parent"
@@ -186,25 +184,38 @@
             android:layout_marginRight="10dp"
             android:layout_below="@id/course_detail_mentor_label_row"/>
 
-
         <LinearLayout
-            android:id="@+id/course_detail_buttons_row"
+            android:id="@+id/course_detail_note_label_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/list_view_mentors"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center_vertical|center_horizontal"
+            android:layout_margin="10dp"
             android:orientation="horizontal">
+            <TextView
+                android:id="@+id/course_detail_note_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Course Notes:"
+                android:textColor="#000"
+                android:textSize="15sp" />
 
             <Button
-                android:id="@+id/course_detail_notes_button"
-                android:layout_width="30dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="View Notes"
-                android:textSize="12sp" />
+                android:onClick="addNoteHandler"
+                android:text="Add Note"
+                android:textAlignment="center"
+                android:textSize="10sp" />
         </LinearLayout>
+
+        <ListView
+            android:id="@+id/list_view_notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@id/course_detail_note_label_row"/>
+
 
     </RelativeLayout>
 

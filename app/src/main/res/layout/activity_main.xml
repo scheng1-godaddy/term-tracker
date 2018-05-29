@@ -15,7 +15,9 @@
         android:layout_centerInParent="true"
         android:onClick="handleViewTerms"
         android:text="@string/termsButtonText"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="50dp"
+        android:textColor="#FFF"
+        android:background="@color/colorPrimaryDark"/>
 
     <Button
         android:id="@+id/buttonViewCourses"
@@ -26,5 +28,7 @@
         android:layout_marginTop="20dp"
         android:text="@string/coursesButtonText"
         android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:textColor="#FFF"
+        android:background="@color/colorPrimaryDark"/>
 </RelativeLayout>

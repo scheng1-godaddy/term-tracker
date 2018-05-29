@@ -23,6 +23,7 @@ import com.shawncheng.termtracker.model.Assessment;
 import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.Mentor;
 import com.shawncheng.termtracker.model.Term;
+import com.shawncheng.termtracker.util.Util;
 
 import static com.shawncheng.termtracker.util.IntentConstants.*;
 
@@ -77,6 +78,7 @@ public class CourseAddAssessmentActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.list_view_course_add_assessments);
         ListAdapter listAdapter = new AssessmentListAdapter(this, assessmentArrayList);
         listView.setAdapter(listAdapter);
+        Util.setListViewHeightBasedOnChildren(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

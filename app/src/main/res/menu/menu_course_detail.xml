@@ -5,9 +5,6 @@
     <item android:id="@+id/menu_edit_course"
         android:title="Edit"
         app:showAsAction="always" />
-    <item android:id="@+id/menu_delete_course"
-        android:title="Delete"
-        app:showAsAction="always" />
     <item android:id="@+id/menu_close_course"
         android:title="Close"
         app:showAsAction="always" />

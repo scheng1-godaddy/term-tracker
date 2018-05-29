@@ -18,6 +18,10 @@ import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.GoalDate;
 import com.shawncheng.termtracker.model.Term;
 import com.shawncheng.termtracker.util.Util;
+
+import java.util.Arrays;
+import java.util.List;
+
 import static com.shawncheng.termtracker.util.IntentConstants.*;
 
 public class AssessmentAddActivity extends AppCompatActivity {
@@ -41,13 +45,57 @@ public class AssessmentAddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_assessment_add);
         populateTypeSpinner();
         this.intent = getIntent();
-        resolveType();
         goalDate = null;
         this.assessmentNameInput = findViewById(R.id.assessment_add_name);
         this.dueDateInput = findViewById(R.id.assessment_add_due_date_value);
         this.goalDateInput = findViewById(R.id.assessment_add_goal_date_value);
         this.assessmentType = findViewById(R.id.assessment_add_type_spinner);
         dbOpenHelper = new DBOpenHelper(this);
+        resolveType();
+
+    }
+
+    private void populateTypeSpinner() {
+        Spinner statusDropDown = findViewById(R.id.assessment_add_type_spinner);
+        ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(this, R.array.assessment_type_array, android.R.layout.simple_spinner_item);
+        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        statusDropDown.setAdapter(statusAdapter);
+    }
+
+    private void resolveType() {
+        if (this.intent.getStringExtra(INTENT_TAG_TYPE).equals(INTENT_VALUE_ADD)) {
+            this.isAdd = true;
+        }
+        this.activeCourse = (Course) intent.getSerializableExtra(INTENT_TAG_COURSE);
+        if (isAdd) {
+            setTitle("Add Assessment");
+        } else {
+            setTitle("Modify Assessment");
+            activeAssessment = (Assessment) intent.getSerializableExtra(INTENT_TAG_ASSESSMENT);
+            populateInputs();
+        }
+    }
+
+    private void populateInputs() {
+        this.assessmentNameInput.setText(activeAssessment.getTitle());
+        this.dueDateInput.setText(activeAssessment.getDueDate());
+        this.assessmentType.setSelection(getAssessmentTypePosition(activeAssessment.getType()));
+        this.goalDateInput.setText(getGoalDate());
+    }
+
+    private int getAssessmentTypePosition(String item) {
+        String[] typeArray = getResources().getStringArray(R.array.assessment_type_array);
+        List<String> typeArrayList = Arrays.asList(typeArray);
+        return typeArrayList.indexOf(item);
+    }
+
+    private String getGoalDate() {
+        this.goalDate = dbOpenHelper.getGoal(activeAssessment.getAssessmentId());
+        if (goalDate != null && !(goalDate.getDate().trim().isEmpty())) {
+            return goalDate.getDate();
+        } else {
+            return "";
+        }
     }
 
     @Override
@@ -68,29 +116,6 @@ public class AssessmentAddActivity extends AppCompatActivity {
         return true;
     }
 
-    //TODO populate inputs for edit
-
-    private void populateTypeSpinner() {
-        Spinner statusDropDown = findViewById(R.id.assessment_add_type_spinner);
-        ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(this, R.array.assessment_type_array, android.R.layout.simple_spinner_item);
-        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        statusDropDown.setAdapter(statusAdapter);
-    }
-
-    private void resolveType() {
-        if (this.intent.getStringExtra(INTENT_TAG_TYPE).equals(INTENT_VALUE_ADD)) {
-            this.isAdd = true;
-        }
-        this.activeCourse = (Course) intent.getSerializableExtra(INTENT_TAG_COURSE);
-        Log.d(TAG, "resolveType - active course is: " + activeCourse.getTitle());
-        if (isAdd) {
-            setTitle("Add Assessment");
-
-        } else {
-            setTitle("Modify Assessment");
-        }
-    }
-
     public void saveAssessment() {
         if (validateInput()) {
             if (isAdd) {
@@ -103,9 +128,6 @@ public class AssessmentAddActivity extends AppCompatActivity {
                         this.dbOpenHelper.insertGoal(goalDate.getDate(), assessmentId);
                     }
                     finish();
-//                    Intent newIntent = new Intent(this, CourseAddMentorActivity.class);
-//                    newIntent.putExtra("course", newCourse);
-//                    startActivity(newIntent);
                 } else {
                     Toast.makeText(getBaseContext(), "Failed to add assessment", Toast.LENGTH_SHORT).show();
                 }
@@ -118,9 +140,6 @@ public class AssessmentAddActivity extends AppCompatActivity {
                         this.dbOpenHelper.updateGoal(goalDate.getDate(), activeAssessment.getAssessmentId());
                     }
                     finish();
-//                    Intent newIntent = new Intent(this, CourseAddMentorActivity.class);
-//                    newIntent.putExtra("course", newCourse);
-//                    startActivity(newIntent);
                 } else {
                     Toast.makeText(getBaseContext(), "Failed to update assessment", Toast.LENGTH_SHORT).show();
                 }
@@ -131,13 +150,13 @@ public class AssessmentAddActivity extends AppCompatActivity {
     private boolean validateInput() {
         this.newAssessment = new Assessment();
         Log.d(TAG, "validateInput: Validating input for " + this.assessmentNameInput.getText().toString());
-        if(this.assessmentNameInput.getText().toString().trim().isEmpty()) {
+        if (this.assessmentNameInput.getText().toString().trim().isEmpty()) {
             Toast.makeText(getBaseContext(), "Please enter an assessment name", Toast.LENGTH_SHORT).show();
             return false;
         } else {
             newAssessment.setTitle(this.assessmentNameInput.getText().toString());
         }
-        if(!(Util.checkDate(this.dueDateInput.getText().toString()))) {
+        if (!(Util.checkDate(this.dueDateInput.getText().toString()))) {
             Toast.makeText(getBaseContext(), "Please enter a valid due date, format: yyyy-mm-dd", Toast.LENGTH_SHORT).show();
             return false;
         } else {

@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.terms_activities.TermDetailActivity"
-    android:fillViewport="true">
+    tools:context=".activities.terms_activities.TermDetailActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/term_detail_relativelayout">
 
         <TextView
             android:id="@+id/term_name"

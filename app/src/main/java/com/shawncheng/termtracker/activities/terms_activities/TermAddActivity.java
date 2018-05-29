@@ -13,6 +13,7 @@ import com.shawncheng.termtracker.R;
 import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Term;
 import com.shawncheng.termtracker.util.Util;
+import static com.shawncheng.termtracker.util.IntentConstants.*;
 
 public class TermAddActivity extends AppCompatActivity {
 
@@ -39,12 +40,12 @@ public class TermAddActivity extends AppCompatActivity {
     }
 
     private void resolveType() {
-        this.termType = this.intent.getStringExtra("type");
+        this.termType = this.intent.getStringExtra(INTENT_TAG_TYPE);
         Log.d("TermAddActivity", "onCreate: Type is: " + termType);
-        if (termType.equals("add")) {
+        if (termType.equals(INTENT_VALUE_ADD)) {
             setTitle("Add Term");
         } else {
-            this.existingTerm = (Term) intent.getSerializableExtra("term");
+            this.existingTerm = (Term) intent.getSerializableExtra(INTENT_TAG_TERM);
             setTitle("Modify Term");
             setInputs(this.intent);
         }
@@ -79,17 +80,17 @@ public class TermAddActivity extends AppCompatActivity {
 
     private void saveButtonHandler() {
         if (validateInput()) {
-            if (this.termType.equals("add")) {
+            if (this.termType.equals(INTENT_VALUE_ADD)) {
                 if (this.dbOpenHelper.insertTerm(newTerm.getTermName(), newTerm.getStartDate(), newTerm.getEndDate())) {
                     Toast.makeText(getBaseContext(), "Term successfully added", Toast.LENGTH_SHORT).show();
-                    switchActivity();
+                    finish();
                 } else {
                     Toast.makeText(getBaseContext(), "Failed to add term", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 if (this.dbOpenHelper.updateTerm(existingTerm.getTermId(), newTerm.getTermName(), newTerm.getStartDate(), newTerm.getEndDate())) {
                     Toast.makeText(getBaseContext(), "Term successfully updated", Toast.LENGTH_SHORT).show();
-                    startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(getBaseContext(), "Failed to update term", Toast.LENGTH_SHORT).show();
                 }

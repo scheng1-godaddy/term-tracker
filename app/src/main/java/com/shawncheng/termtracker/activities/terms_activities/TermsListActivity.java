@@ -40,24 +40,12 @@ public class TermsListActivity extends AppCompatActivity {
         populateTermListView();
     }
 
-    /**
-     * Create menu (only add button)
-     *
-     * @param menu
-     * @return
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_term_list, menu);
         return true;
     }
 
-    /**
-     * Menu logic
-     *
-     * @param item
-     * @return
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -71,8 +59,6 @@ public class TermsListActivity extends AppCompatActivity {
         }
     }
 
-
-    // Populate the listView
     private void populateTermListView() {
         Log.d(TAG, "populateListView: Retreiving terms to populate ListView");
         this.dbOpenHelper = new DBOpenHelper(this);

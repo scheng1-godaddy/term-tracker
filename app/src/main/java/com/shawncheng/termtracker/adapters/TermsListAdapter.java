@@ -28,7 +28,11 @@ public class TermsListAdapter extends ArrayAdapter<Term> {
             convertView = layoutInflater.inflate(R.layout.viewlist_term_row, parent, false);
             Term termItem = getItem(position);
             TextView termTextView = convertView.findViewById(R.id.term_row_name);
+            TextView termStartDateView = convertView.findViewById(R.id.term_row_start_date);
+            TextView termEndDateView = convertView.findViewById(R.id.term_row_end_date);
             termTextView.setText(termItem.getTermName());
+            termStartDateView.setText(termItem.getStartDate());
+            termEndDateView.setText(termItem.getEndDate());
         }
         return convertView;
     }

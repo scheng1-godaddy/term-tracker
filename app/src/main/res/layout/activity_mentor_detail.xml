@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.mentor_activities.MentorDetailActivity">
+    tools:context=".activities.mentor_activities.MentorDetailActivity"
+    android:id="@+id/mentor_detail_relativelayout">
 
     <TextView
         android:id="@+id/mentor_detail_name"
@@ -79,22 +80,6 @@
             android:textSize="15sp" />
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/mentor_detail_edit_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/mentor_detail_email_row"
-        android:onClick="editButtonHandler"
-        android:text="Edit" />
-
-    <Button
-        android:id="@+id/mentor_detail_delete_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/mentor_detail_edit_button"
-        android:onClick="deleteButtonHandler"
-        android:text="Delete" />
 
 
 </RelativeLayout>

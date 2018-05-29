@@ -10,6 +10,7 @@ import com.shawncheng.termtracker.model.Assessment;
 import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.GoalDate;
 import com.shawncheng.termtracker.model.Mentor;
+import com.shawncheng.termtracker.model.Note;
 import com.shawncheng.termtracker.model.Term;
 
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     // Term Table Constants
     private static final String TERM_TABLE_NAME = "term";
+    public static final String SQL_GET_TERMS = "SELECT * FROM " + TERM_TABLE_NAME;
     private static final String TERM_COLUMN_ID = "termId";
-
     private static final String TERM_COLUMN_TITLE = "title";
     private static final String TERM_COLUMN_START = "startDate";
     private static final String TERM_COLUMN_END = "endDate";
@@ -31,8 +32,6 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             TERM_COLUMN_TITLE + " TEXT NOT NULL," +
             TERM_COLUMN_START + " TEXT NOT NULL," +
             TERM_COLUMN_END + " TEXT NOT NULL);";
-    public static final String SQL_GET_TERMS = "SELECT * FROM " + TERM_TABLE_NAME;
-
     // Course Table Constants
     private static final String COURSE_TABLE_NAME = "course";
     private static final String COURSE_COLUMN_ID = "courseId";
@@ -100,27 +99,22 @@ public class DBOpenHelper extends SQLiteOpenHelper {
             "REFERENCES " + ASSESSMENT_TABLE_NAME + "(" + ASSESSMENT_COLUMN_ID + "));";
     public static final String SQL_GET_GOAL = "SELECT * FROM " + GOAL_DATE_TABLE_NAME + " WHERE " + GOAL_DATE_COLUMN_ASSESSMENT_ID + " = ";
 
+    // Note table constants
+    private static final String NOTE_TABLE_NAME = "note";
+    private static final String NOTE_COLUMN_ID = "noteId";
+    private static final String NOTE_COLUMN_NOTE = "note";
+    private static final String NOTE_COLUMN_COURSE_ID= "courseId";
+    public static final String SQL_GET_NOTES = "SELECT * FROM " + NOTE_TABLE_NAME + " WHERE " + NOTE_COLUMN_COURSE_ID + " = ";
+    public static final String CREATE_TABLE_NOTE = "CREATE TABLE " + NOTE_TABLE_NAME + "(" +
+            NOTE_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            NOTE_COLUMN_NOTE + " TEXT NOT NULL," +
+            NOTE_COLUMN_COURSE_ID + " INTEGER NOT NULL," +
+            "FOREIGN KEY(" + NOTE_COLUMN_COURSE_ID + ") " +
+            "REFERENCES " + COURSE_TABLE_NAME + "(" + COURSE_COLUMN_ID + "));";
+
+
     public DBOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TABLE_TERM);
-        db.execSQL(CREATE_TABLE_COURSE);
-        db.execSQL(CREATE_TABLE_MENTOR);
-        db.execSQL(CREATE_TABLE_ASSESSMENT);
-        db.execSQL(CREATE_TABLE_GOAL_DATE);
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TERM_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + COURSE_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + MENTOR_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + ASSESSMENT_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + GOAL_DATE_TABLE_NAME);
-        onCreate(db);
     }
 
     public ArrayList<Term> getTerms() {
@@ -138,6 +132,14 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         }
         res.close();
         return termArrayList;
+    }    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_TABLE_TERM);
+        db.execSQL(CREATE_TABLE_COURSE);
+        db.execSQL(CREATE_TABLE_MENTOR);
+        db.execSQL(CREATE_TABLE_ASSESSMENT);
+        db.execSQL(CREATE_TABLE_GOAL_DATE);
+        db.execSQL(CREATE_TABLE_NOTE);
     }
 
     public boolean insertTerm(String title, String start, String end) {
@@ -148,6 +150,15 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         cv.put(TERM_COLUMN_END, end);
         db.insert(TERM_TABLE_NAME, null, cv);
         return true;
+    }    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TERM_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + COURSE_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MENTOR_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ASSESSMENT_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + GOAL_DATE_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + NOTE_TABLE_NAME);
+        onCreate(db);
     }
 
     public boolean deleteTerm(int termId) {
@@ -185,7 +196,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                 TERM_TABLE_NAME,
                 contentValues,
                 TERM_COLUMN_ID + " = ? ",
-                new String[] { Integer.toString(id) }
+                new String[]{Integer.toString(id)}
         );
         return true;
     }
@@ -199,14 +210,6 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         contentValues.put(COURSE_COLUMN_STATUS, status);
         contentValues.put(COURSE_COLUMN_TERM_ID, termId);
         long courseId = db.insert(COURSE_TABLE_NAME, null, contentValues);
-//        for (Mentor mentor : mentors) {
-//            ContentValues cv1 = new ContentValues();
-//            cv1.put(MENTOR_COLUMN_NAME, mentor.getName());
-//            cv1.put(MENTOR_COLUMN_PHONE, mentor.getPhone());
-//            cv1.put(MENTOR_COLUMN_EMAIL, mentor.getEmail());
-//            cv1.put(MENTOR_COLUMN_COURSE_ID, mCourseId);
-//            db.insert(MENTOR_TABLE_NAME, null, cv1);
-//        }
         return courseId;
     }
 
@@ -233,7 +236,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public ArrayList<Course> getCourses(int termId) {
         ArrayList<Course> courseList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(SQL_GET_COURSES + termId,null);
+        Cursor cursor = db.rawQuery(SQL_GET_COURSES + termId, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             int mId = cursor.getInt(0);
@@ -258,6 +261,34 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean deleteAssessmentFromCourse(int courseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<Assessment> assessmentArrayList = getAssessments(courseId);
+        db.delete(ASSESSMENT_TABLE_NAME, ASSESSMENT_COLUMN_COURSE_ID + " = " + courseId, null);
+        for (Assessment assessment : assessmentArrayList) {
+            db.delete(GOAL_DATE_TABLE_NAME, GOAL_DATE_COLUMN_ASSESSMENT_ID + " = " + assessment.getAssessmentId(), null);
+        }
+        return true;
+    }
+
+    public ArrayList<Assessment> getAssessments(int courseId) {
+        ArrayList<Assessment> assessmentArrayList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(SQL_GET_ASSESSMENTS + courseId, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int mId = cursor.getInt(0);
+            String mTitle = cursor.getString(1);
+            String mType = cursor.getString(2);
+            String mDue = cursor.getString(3);
+            int mCourseId = cursor.getInt(4);
+            assessmentArrayList.add(new Assessment(mId, mTitle, mType, mDue, mCourseId));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return assessmentArrayList;
+    }
+
     public boolean updateCourse(int id, String title, String start, String end, String status) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -265,7 +296,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         contentValues.put(COURSE_COLUMN_START, start);
         contentValues.put(COURSE_COLUMN_END, end);
         contentValues.put(COURSE_COLUMN_STATUS, status);
-        db.update(COURSE_TABLE_NAME, contentValues, COURSE_COLUMN_ID + " = ? ", new String[] { Integer.toString(id) });
+        db.update(COURSE_TABLE_NAME, contentValues, COURSE_COLUMN_ID + " = ? ", new String[]{Integer.toString(id)});
         return true;
     }
 
@@ -286,14 +317,14 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         contentValues.put(MENTOR_COLUMN_PHONE, phone);
         contentValues.put(MENTOR_COLUMN_EMAIL, email);
         contentValues.put(MENTOR_COLUMN_COURSE_ID, courseId);
-        db.update(MENTOR_TABLE_NAME, contentValues, MENTOR_COLUMN_ID + " = ? ", new String[] { Integer.toString(id) });
+        db.update(MENTOR_TABLE_NAME, contentValues, MENTOR_COLUMN_ID + " = ? ", new String[]{Integer.toString(id)});
         return true;
     }
 
     public ArrayList<Mentor> getMentors(int courseId) {
         ArrayList<Mentor> mentorList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(SQL_GET_MENTORS + courseId,null);
+        Cursor cursor = db.rawQuery(SQL_GET_MENTORS + courseId, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             int id = cursor.getInt(0);
@@ -350,8 +381,27 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         contentValues.put(ASSESSMENT_COLUMN_TYPE, type);
         contentValues.put(ASSESSMENT_COLUMN_DUE, due);
         contentValues.put(ASSESSMENT_COLUMN_COURSE_ID, courseId);
-        db.update(ASSESSMENT_TABLE_NAME, contentValues, ASSESSMENT_COLUMN_ID + " = ?", new String[] {Integer.toString(id)});
+        db.update(ASSESSMENT_TABLE_NAME, contentValues, ASSESSMENT_COLUMN_ID + " = ?", new String[]{Integer.toString(id)});
         return true;
+    }
+
+    public Assessment getAssessment(int assessmentId) {
+        Assessment assessment;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + ASSESSMENT_TABLE_NAME + " WHERE " + ASSESSMENT_COLUMN_ID + " = " + assessmentId,
+                null
+        );
+        cursor.moveToFirst();
+        assessment = new Assessment(
+                cursor.getInt(0),
+                cursor.getString(1),
+                cursor.getString(2),
+                cursor.getString(3),
+                cursor.getInt(4)
+        );
+        cursor.close();
+        return assessment;
     }
 
     public boolean deleteAssessment(int assessmentId) {
@@ -361,35 +411,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean deleteAssessmentFromCourse(int courseId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ArrayList<Assessment> assessmentArrayList = getAssessments(courseId);
-        db.delete(ASSESSMENT_TABLE_NAME, ASSESSMENT_COLUMN_COURSE_ID + " = " + courseId, null);
-        for (Assessment assessment : assessmentArrayList) {
-            db.delete(GOAL_DATE_TABLE_NAME, GOAL_DATE_COLUMN_ASSESSMENT_ID + " = " + assessment.getAssessmentId(), null);
-        }
-        return true;
-    }
-
-    public ArrayList<Assessment> getAssessments(int courseId) {
-        ArrayList<Assessment> assessmentArrayList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(SQL_GET_ASSESSMENTS + courseId,null);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            int mId = cursor.getInt(0);
-            String mTitle = cursor.getString(1);
-            String mType = cursor.getString(2);
-            String mDue = cursor.getString(3);
-            int mCourseId = cursor.getInt(4);
-            assessmentArrayList.add(new Assessment(mId, mTitle, mType, mDue, mCourseId));
-            cursor.moveToNext();
-        }
-        cursor.close();
-        return assessmentArrayList;
-    }
-
-    public void insertGoal(String goalDate,  long assessmentId) {
+    public void insertGoal(String goalDate, long assessmentId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(GOAL_DATE_COLUMN_DATE, goalDate);
@@ -397,11 +419,11 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         db.insert(GOAL_DATE_TABLE_NAME, null, contentValues);
     }
 
-    public void updateGoal(String goalDate,  long assessmentId) {
+    public void updateGoal(String goalDate, long assessmentId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(GOAL_DATE_COLUMN_DATE, goalDate);
-        db.update(GOAL_DATE_TABLE_NAME, contentValues, GOAL_DATE_COLUMN_ASSESSMENT_ID + " = ?", new String[] {Long.toString(assessmentId)});
+        db.update(GOAL_DATE_TABLE_NAME, contentValues, GOAL_DATE_COLUMN_ASSESSMENT_ID + " = ?", new String[]{Long.toString(assessmentId)});
     }
 
     public GoalDate getGoal(int assessmentId) {
@@ -435,6 +457,59 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return goalDates;
+    }
+
+    public ArrayList<Note> getNotes(int courseId) {
+        ArrayList<Note> notes = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(SQL_GET_NOTES + courseId, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int id = cursor.getInt(0);
+            String note = cursor.getString(1);
+            int cId = cursor.getInt(2);
+            notes.add(new Note(id, note, cId));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return notes;
+    }
+
+    public long insertNote(int courseId, String note) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NOTE_COLUMN_COURSE_ID, courseId);
+        contentValues.put(NOTE_COLUMN_NOTE, note);
+        return db.insert(NOTE_TABLE_NAME, null, contentValues);
+    }
+
+    public int updateNote(int id, String note) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NOTE_COLUMN_NOTE, note);
+        return db.update(
+                NOTE_TABLE_NAME,
+                contentValues,
+                NOTE_COLUMN_ID + " = ?",
+                new String[] { Integer.toString(id)}
+        );
+    }
+
+    public Note getNote(int noteId) {
+        Note note;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + NOTE_TABLE_NAME + " WHERE " + NOTE_COLUMN_ID + " = " + noteId,
+                null
+        );
+        cursor.moveToFirst();
+        note = new Note(
+                cursor.getInt(0),
+                cursor.getString(1),
+                cursor.getInt(2)
+        );
+        cursor.close();
+        return note;
     }
 
 }

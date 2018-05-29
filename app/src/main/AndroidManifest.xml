@@ -17,13 +17,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.terms_activities.TermsListActivity" />
+            android:name=".activities.terms_activities.TermsListActivity"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.terms_activities.TermAddActivity"
-            android:parentActivityName=".activities.MainActivity" />
+            android:parentActivityName=".activities.terms_activities.TermsListActivity" />
         <activity
             android:name=".activities.terms_activities.TermDetailActivity"
-            android:parentActivityName=".activities.MainActivity" />
+            android:parentActivityName=".activities.terms_activities.TermsListActivity" />
         <activity android:name=".activities.course_activities.CourseDetailActivity" />
         <activity android:name=".activities.assessment_activities.AssessmentDetailActivity" />
         <activity android:name=".activities.mentor_activities.MentorAddActivity" />
@@ -31,7 +32,10 @@
         <activity android:name=".activities.course_activities.CourseAddActivity" />
         <activity android:name=".activities.assessment_activities.AssessmentAddActivity" />
         <activity android:name=".activities.course_activities.CourseAddMentorActivity" />
-        <activity android:name=".activities.course_activities.CourseAddAssessmentActivity"></activity>
+        <activity android:name=".activities.course_activities.CourseAddAssessmentActivity" />
+        <activity android:name=".activities.notes_activities.NotesListActivity" />
+        <activity android:name=".activities.notes_activities.NoteAddActivity" />
+        <activity android:name=".activities.notes_activities.NoteDetailActivity"></activity>
     </application>
 
 </manifest>
