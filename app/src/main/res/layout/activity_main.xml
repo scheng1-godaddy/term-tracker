@@ -32,4 +32,14 @@
         android:onClick="shareSettingsHandler"
         android:text="Share Settings"
         android:textColor="#FFF" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonSettings"
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        app:srcCompat="@drawable/wgu" />
 </RelativeLayout>
