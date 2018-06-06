@@ -13,7 +13,7 @@ import com.shawncheng.termtracker.R;
 import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Term;
 import com.shawncheng.termtracker.util.Util;
-import static com.shawncheng.termtracker.util.IntentConstants.*;
+import static com.shawncheng.termtracker.util.TermTrackerConstants.*;
 
 public class TermAddActivity extends AppCompatActivity {
 

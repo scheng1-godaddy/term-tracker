@@ -1,7 +1,6 @@
 package com.shawncheng.termtracker.activities.terms_activities;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +15,7 @@ import com.shawncheng.termtracker.*;
 import com.shawncheng.termtracker.adapters.TermsListAdapter;
 import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Term;
-import static com.shawncheng.termtracker.util.IntentConstants.*;
+import static com.shawncheng.termtracker.util.TermTrackerConstants.*;
 
 import java.util.ArrayList;
 

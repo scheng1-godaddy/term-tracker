@@ -10,12 +10,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.shawncheng.termtracker.R;
-import com.shawncheng.termtracker.activities.course_activities.CourseAddActivity;
 import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.Mentor;
-import com.shawncheng.termtracker.util.Util;
-import static com.shawncheng.termtracker.util.IntentConstants.*;
+
+import static com.shawncheng.termtracker.util.TermTrackerConstants.*;
 
 import java.util.ArrayList;
 

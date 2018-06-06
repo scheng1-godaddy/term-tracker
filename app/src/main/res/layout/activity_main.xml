@@ -20,15 +20,16 @@
         android:background="@color/colorPrimaryDark"/>
 
     <Button
-        android:id="@+id/buttonViewCourses"
+        android:id="@+id/buttonSettings"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/buttonViewTerms"
         android:layout_below="@+id/buttonViewTerms"
-        android:layout_marginTop="20dp"
-        android:text="@string/coursesButtonText"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
-        android:textColor="#FFF"
-        android:background="@color/colorPrimaryDark"/>
+        android:layout_marginTop="20dp"
+        android:background="@color/colorPrimaryDark"
+        android:onClick="shareSettingsHandler"
+        android:text="Share Settings"
+        android:textColor="#FFF" />
 </RelativeLayout>

@@ -7,31 +7,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.shawncheng.termtracker.R;
-import com.shawncheng.termtracker.activities.assessment_activities.AssessmentAddActivity;
-import com.shawncheng.termtracker.activities.assessment_activities.AssessmentDetailActivity;
-import com.shawncheng.termtracker.activities.mentor_activities.MentorAddActivity;
-import com.shawncheng.termtracker.activities.mentor_activities.MentorDetailActivity;
-import com.shawncheng.termtracker.adapters.AssessmentListAdapter;
-import com.shawncheng.termtracker.adapters.MentorsListAdapter;
 import com.shawncheng.termtracker.database.DBOpenHelper;
-import com.shawncheng.termtracker.model.Assessment;
 import com.shawncheng.termtracker.model.Course;
-import com.shawncheng.termtracker.model.Mentor;
 import com.shawncheng.termtracker.model.Term;
 import com.shawncheng.termtracker.util.Util;
-import static com.shawncheng.termtracker.util.IntentConstants.*;
+import static com.shawncheng.termtracker.util.TermTrackerConstants.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

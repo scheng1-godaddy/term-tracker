@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +20,7 @@ import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.Mentor;
 
-import static com.shawncheng.termtracker.util.IntentConstants.*;
+import static com.shawncheng.termtracker.util.TermTrackerConstants.*;
 
 public class MentorDetailActivity extends AppCompatActivity {
 

@@ -1,6 +1,7 @@
 package com.shawncheng.termtracker.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,10 @@ import com.shawncheng.termtracker.model.Mentor;
 import com.shawncheng.termtracker.model.Term;
 
 import java.util.ArrayList;
+
+import static com.shawncheng.termtracker.util.TermTrackerConstants.MY_PREFS_NAME;
+import static com.shawncheng.termtracker.util.TermTrackerConstants.SHARE_SETTING_KEY;
+import static com.shawncheng.termtracker.util.TermTrackerConstants.SHARE_VALUE_EMAIL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,18 +70,37 @@ public class MainActivity extends AppCompatActivity {
 //        ArrayList<Assessment> assessmentArrayList = mDBHelper.getAssessments(1);
 //        Log.d(TAG, "TEST: First assessment in list: " + assessmentArrayList.get(0).getTitle());
 //        mDBHelper.insertGoal("2018-02-01", 1);
-        GoalDate goal = mDBHelper.getGoal(1);
-        Log.d(TAG, "TEST: Goal date retrieved was: " + goal.getDate());
+
 
         // Remove assessment
         //mDBHelper.deleteAssessment(assessmentArrayList.get(0).getAssessmentId());
 
-
+        setPreferences();
 
     }
 
     public void handleViewTerms(View view) {
         Intent intent = new Intent(this, TermsListActivity.class);
         startActivity(intent);
+    }
+
+    public void shareSettingsHandler(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void setPreferences() {
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        String sharePreference = prefs.getString(SHARE_SETTING_KEY, "NOTHING");
+        Log.d(TAG, "Shared preferences retrieved is: " + sharePreference);
+        if (sharePreference.equals("NOTHING")) {
+            setPreferences("EMAIL");
+        }
+    }
+
+    private void setPreferences(String prefSetting) {
+        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putString(SHARE_SETTING_KEY, prefSetting);
+        editor.apply();
     }
 }

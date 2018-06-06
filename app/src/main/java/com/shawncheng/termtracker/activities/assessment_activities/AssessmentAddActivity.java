@@ -16,13 +16,12 @@ import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Assessment;
 import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.GoalDate;
-import com.shawncheng.termtracker.model.Term;
 import com.shawncheng.termtracker.util.Util;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static com.shawncheng.termtracker.util.IntentConstants.*;
+import static com.shawncheng.termtracker.util.TermTrackerConstants.*;
 
 public class AssessmentAddActivity extends AppCompatActivity {
 

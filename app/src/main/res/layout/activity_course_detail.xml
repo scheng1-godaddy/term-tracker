@@ -79,8 +79,7 @@
                 android:checked="false"
                 android:text="Reminder Alarm"
                 android:textAlignment="viewEnd"
-                android:textSize="12sp"
-                tools:checked="false" />
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout

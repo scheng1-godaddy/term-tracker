@@ -28,7 +28,7 @@ import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.Term;
 import com.shawncheng.termtracker.util.Util;
 
-import static com.shawncheng.termtracker.util.IntentConstants.*;
+import static com.shawncheng.termtracker.util.TermTrackerConstants.*;
 
 import java.util.ArrayList;
 

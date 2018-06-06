@@ -1,6 +1,10 @@
 package com.shawncheng.termtracker.activities.assessment_activities;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.CursorIndexOutOfBoundsException;
@@ -12,25 +16,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shawncheng.termtracker.R;
-import com.shawncheng.termtracker.activities.mentor_activities.MentorAddActivity;
-import com.shawncheng.termtracker.adapters.GoalListAdapter;
 import com.shawncheng.termtracker.database.DBOpenHelper;
 import com.shawncheng.termtracker.model.Assessment;
 import com.shawncheng.termtracker.model.Course;
 import com.shawncheng.termtracker.model.GoalDate;
+import com.shawncheng.termtracker.util.NotificationPublisher;
 
-import static com.shawncheng.termtracker.util.IntentConstants.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import java.util.ArrayList;
+import static com.shawncheng.termtracker.util.TermTrackerConstants.*;
 
 public class AssessmentDetailActivity extends AppCompatActivity {
 
@@ -38,6 +42,7 @@ public class AssessmentDetailActivity extends AppCompatActivity {
     private Assessment activeAssessment;
     private Course activeCourse;
     private DBOpenHelper dbOpenHelper;
+    private GoalDate goalDateValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +60,15 @@ public class AssessmentDetailActivity extends AppCompatActivity {
         setInputs();
 
         addDeleteButton();
+
+        setAlarmSwitch();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         activeAssessment = dbOpenHelper.getAssessment(activeAssessment.getAssessmentId());
+        setAlarmSwitch();
         setInputs();
     }
 
@@ -83,15 +91,45 @@ public class AssessmentDetailActivity extends AppCompatActivity {
         title.setText(activeAssessment.getTitle());
         type.setText(activeAssessment.getType());
         dueDate.setText(activeAssessment.getDueDate());
-        GoalDate goalDateValue;
         try {
             goalDateValue = retrieveGoal();
             if (goalDateValue != null && !(goalDateValue.getDate().trim().isEmpty())) {
                 goalDate.setText(goalDateValue.getDate());
             }
         } catch (CursorIndexOutOfBoundsException e) {
+            goalDateValue = null;
             Log.d(TAG, "Could not find a goal date for assessment: " + activeAssessment.getTitle());
         }
+    }
+
+    private void setAlarmSwitch() {
+        String notificationMsg = "Assessment " + activeAssessment.getTitle() + " goal date reminder";
+        final Switch goalDateSwitch = findViewById(R.id.assessment_goal_date_switch);
+        if (checkAlarm(getNotification(notificationMsg, true), true)) {
+            goalDateSwitch.setChecked(true);
+        }
+        goalDateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    if (goalDateValue != null) {
+                        String notificationMsg = "Assessment " + activeAssessment.getTitle() + " goal date reminder";
+                        scheduleNotification(getNotification(notificationMsg, true), true);
+                        Toast.makeText(getBaseContext(), "Goal Date Reminder On", Toast.LENGTH_SHORT).show();
+                        checkAlarm(getNotification(notificationMsg, true), true);
+                    } else {
+                        Toast.makeText(getBaseContext(), "No goal date set!", Toast.LENGTH_SHORT).show();
+                        goalDateSwitch.setChecked(false);
+                    }
+
+                } else {
+                    String notificationMsg = "Assessment " + activeAssessment.getTitle() + " goal date reminder";
+                    cancelNotification(getNotification(notificationMsg, true), true);
+                    Toast.makeText(getBaseContext(), "Goal Date Reminder Off", Toast.LENGTH_SHORT).show();
+                    checkAlarm(getNotification(notificationMsg, true), true);
+                }
+            }
+        });
     }
 
     private void addDeleteButton() {
@@ -159,6 +197,76 @@ public class AssessmentDetailActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void scheduleNotification(Notification notificationMsg, boolean start) {
+        PendingIntent pendingIntent = getPendingIntent(notificationMsg, start);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        try {
+
+            Date startDate = getDateFormat(start);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, startDate.getTime(), pendingIntent);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void cancelNotification(Notification notificationMsg, boolean start) {
+        PendingIntent pendingIntent = getPendingIntent(notificationMsg, start);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        pendingIntent.cancel();
+        alarmManager.cancel(pendingIntent);
+    }
+
+    private boolean checkAlarm(Notification notificationMsg, boolean start) {
+        Intent notificationIntent = new Intent(this.getApplicationContext(), NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, getNotificationId(start));
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notificationMsg);
+
+        boolean alarmUp = (PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_NO_CREATE) != null);
+
+        if (alarmUp) {
+            Log.d(TAG, "[checkAlarm] The alarm is already active");
+            return true;
+        } else {
+            Log.d(TAG, "[checkAlarm] The alarm is not active");
+            return false;
+        }
+    }
+
+    private Date getDateFormat(boolean start) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Log.d(TAG, "Simple date format is: " + dateFormat.toString());
+        if (start) {
+            return dateFormat.parse(goalDateValue.getDate());
+        } else {
+            return dateFormat.parse(goalDateValue.getDate());
+        }
+
+    }
+
+    private int getNotificationId(boolean isStart) {
+        if (isStart) {
+            return Integer.parseInt(activeCourse.getCourseId() + "1");
+        } else {
+            return Integer.parseInt(activeCourse.getCourseId() + "2");
+        }
+    }
+
+    private PendingIntent getPendingIntent(Notification notificationMsg, boolean start) {
+        Intent notificationIntent = new Intent(this.getApplicationContext(), NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, getNotificationId(start));
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notificationMsg);
+        return PendingIntent.getBroadcast(this, 3, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private Notification getNotification(String content, boolean start) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Term Tracker Alert");
+        builder.setContentText(content);
+        builder.setSmallIcon(R.drawable.ic_notifications_black_24dp);
+        return builder.build();
     }
 
 }
